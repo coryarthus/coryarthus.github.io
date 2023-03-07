@@ -2,11 +2,7 @@
 <html>
     <head>
         <title>Page Title</title>
-    </head>
-
-    <body>
-	    
-        <style type='text/css'>
+	<style type='text/css'>
 	.embeddedServiceHelpButton .helpButton .uiButton {
 		background-color: #005290;
 		font-family: "Arial", sans-serif;
@@ -20,10 +16,10 @@
     		margin-right: 100px;
 		}
 </style>
-
-	    <table border="1"><tr>
-		    <td><p>Click <a href="#" name="start_conversation" id="start_conversation" onclick="embedded_svc.inviteAPI.inviteButton.acceptInvite(); return false;">here</a> to start a live chat conversation with us.</p></td>
-		    <td><script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+    </head>
+    <body>
+<p>Click <a href="#" name="start_conversation" id="start_conversation" onclick="embedded_svc.inviteAPI.inviteButton.acceptInvite(); return false;">here</a> to start a live chat conversation with us.</p></td>
+	    <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
 <script type='text/javascript'>
 	var initESW = function(gslbBaseURL) {
 		embedded_svc.settings.displayHelpButton = true; //Or false
@@ -78,8 +74,7 @@
 	} else {
 		initESW('https://service.force.com');
 	}
-</script></td>
-		    </tr></table>
+</script>
     </body>
 
 </html>
