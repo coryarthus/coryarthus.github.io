@@ -5,7 +5,6 @@
     </head>
 
     <body>
-	    <p>Click <a href="#" name="start_conversation" id="start_conversation" onclick="embedded_svc.inviteAPI.inviteButton.acceptInvite(); return false;">here</a> to start a live chat conversation with us.</p>
 	    
         <style type='text/css'>
 	.embeddedServiceHelpButton .helpButton .uiButton {
@@ -22,7 +21,9 @@
 		}
 </style>
 
-<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+	    <table border="1"><tr>
+		    <td><p>Click <a href="#" name="start_conversation" id="start_conversation" onclick="embedded_svc.inviteAPI.inviteButton.acceptInvite(); return false;">here</a> to start a live chat conversation with us.</p></td>
+		    <td><script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
 <script type='text/javascript'>
 	var initESW = function(gslbBaseURL) {
 		embedded_svc.settings.displayHelpButton = true; //Or false
@@ -77,8 +78,8 @@
 	} else {
 		initESW('https://service.force.com');
 	}
-</script>
-        
+</script></td>
+		    </tr></table>
     </body>
 
 </html>
