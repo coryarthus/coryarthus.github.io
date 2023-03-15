@@ -11,34 +11,26 @@
 	    </ul>
 	    <p>Click <a href="#" name="start_conversation" id="start_conversation" onclick="embedded_svc.inviteAPI.inviteButton.acceptInvite(); return false;">here</a> to start a live chat conversation with us.</p></td>
 	
-	<style type='text/css'>
+<style type='text/css'>
 	.embeddedServiceHelpButton .helpButton .uiButton {
 		background-color: #005290;
-		font-family: "Arial", sans-serif;
+		font-family: "Lucida Console", sans-serif;
 	}
 	.embeddedServiceHelpButton .helpButton .uiButton:focus {
 		outline: 1px solid #005290;
 	}
-		
-	.embeddedServiceHelpButton .helpButton {
-    		margin-bottom: 100px;
-    		margin-right: 100px;
-		}
 </style>
-	<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+
+<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
 <script type='text/javascript'>
 	var initESW = function(gslbBaseURL) {
 		embedded_svc.settings.displayHelpButton = true; //Or false
-		embedded_svc.settings.language = 'en'; //For example, enter 'en' or 'en-US'
-		//embedded_svc.settings.extraPrechatFormDetails.push({
-                //    value: 'Cory Github Site',
-                //    transcriptFields: ['PFZ_Chat_Channel_Details__c']
-                //});
+		embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
 
-		embedded_svc.settings.defaultMinimizedText = 'TAWK to me'; //(Defaults to Chat with an Expert)
-		embedded_svc.settings.disabledMinimizedText = 'Aint nobody here'; //(Defaults to Agent Offline)
+		embedded_svc.settings.defaultMinimizedText = 'SUP?'; //(Defaults to Chat with an Expert)
+		embedded_svc.settings.disabledMinimizedText = 'Aint nobody home'; //(Defaults to Agent Offline)
 
-		embedded_svc.settings.loadingText = 'SIT TIGHT!'; //(Defaults to Loading)
+		embedded_svc.settings.loadingText = 'Hold a sec...'; //(Defaults to Loading)
 		//embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
 
 		// Settings for Chat
