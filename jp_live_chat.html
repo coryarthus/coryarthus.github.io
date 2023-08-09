@@ -54,7 +54,9 @@
         embedded_svc.settings.entryFeature = 'LiveAgent';
 
         let disclaimerText =
-            'Japan disclaimer text at <a href="https://www.pfizer.co.jp/pfizer/privacy/purpose">link</a>';
+            '・本チャットでは、弊社ウェブサイトのコンテンツの掲載箇所・アクセス方法をナビゲートいたします。 ウェブサイトに該当のコンテンツの掲載が無い場合や、チャットでの回答・対応が出来かねるご質問の場合は、電話あるいはメールにてご回答させていただきます。 <br />' +
+            '・ファイザー製品情報センターでは、ご入力内容を記録・保管しております。収集したデータは、適切な情報提供活動や製品やサービスの向上のためのアンケートの送付の他、<a href="https://www.pfizer.co.jp/pfizer/privacy/purpose" target="_blank">プライバシーポリシー</a>に記載の利用目的の範囲で利用させていただいております。<br />' +
+            '・お問い合わせページの記載事項についてご了承の上、チャットのご利用をお願い申し上げます。';
         let disclaimerLink = '';
 
         embedded_svc.addEventHandler('afterMaximize', function (data) {
