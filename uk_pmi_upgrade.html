@@ -17,103 +17,97 @@
 	}
 </style>
 
-<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
-<script type="text/javascript" src="https://pfizermedinfo.my.salesforce-sites.com/livechat/resource/prechatSettings_UK"></script>
+</script><script type='text/javascript' src="https://service.force.com/embeddedservice/5.0/esw.min.js"></script>
+    <script type="text/javascript" src="https://pfizermedinfo--test.sandbox.my.salesforce-sites.com/livechat/resource/prechatSettings_UK"></script>
+          <script type="text/javascript" src="https://pfizermedinfo--test.sandbox.my.salesforce-sites.com/livechat/resource/chatbot_functions"></script>
+        <script type='text/javascript'>
+      var initESW = function(gslbBaseURL) {
+                  handleChatbot();
+        
+                  embedded_svc.settings.widgetWidth = "435px";
+          embedded_svc.settings.widgetHeight = "100%";
+        
+        embedded_svc.settings.displayHelpButton = false;
+        embedded_svc.settings.language = "en_GB";
 
-<script
-	type="text/javascript"
-	src="https://pfizermedinfo.my.salesforce-sites.com/livechat/resource/chatbot_functions"
-></script>
+                  embedded_svc.settings.extraPrechatFormDetails.push({
+                          label: 'Channel Details',
+                          value: 'UK-GB PMI HCP Website',
+                          transcriptFields: ['PFZ_Chat_Channel_Details__c'],
+                      });
+        
+        embedded_svc.settings.defaultMinimizedText = "Chat with an expert";
+        embedded_svc.settings.disabledMinimizedText = "Chat Unavailable";
 
-<script type='text/javascript'>
-	var initESW = function(gslbBaseURL) {
+        //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+        //embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
 
-		handleChatbot();
-		
-		embedded_svc.settings.displayHelpButton = true; //Or false
-		embedded_svc.settings.language = 'en_GB'; //For example, enter 'en' or 'en-US'
+        // Settings for Chat
+        //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+        // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+        // Returns a valid button ID.
+        //};
+        //embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+                //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+        //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
 
-		embedded_svc.settings.extraPrechatFormDetails.push({
-			label: 'Channel Details',
-            value: 'UK-GB PMI HCP Website',
-            transcriptFields: ['PFZ_Chat_Channel_Details__c']
+        embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+        embedded_svc.settings.entryFeature = 'LiveAgent';
+
+        let disclaimerText = "Pfizer respects your privacy and protects your personal data, our Privacy Policy is found at ";
+        let disclaimerLink = "https://privacycenter.pfizer.com/en/";
+
+        embedded_svc.addEventHandler('afterMaximize', function (data) {
+          console.log('afterMaximize event was fired.');
+          if (!document.getElementById('chat_disclaimer')) {
+            let disclaimerElement = document.createElement('p');
+            disclaimerElement.id = 'chat_disclaimer';
+            disclaimerElement.style.padding = '5px';
+            disclaimerElement.appendChild(document.createTextNode(disclaimerText));
+
+            let a = document.createElement('a');
+            let linkText = document.createTextNode(disclaimerLink);
+            a.appendChild(linkText);
+            a.title = disclaimerLink;
+            a.href = disclaimerLink;
+            a.target = '_blank';
+            disclaimerElement.appendChild(a);
+
+            let sidebar = document.querySelector(
+              'div.formContent.embeddedServiceSidebarForm'
+            );
+
+            sidebar.insertBefore(disclaimerElement, sidebar.childNodes[0]);
+          }
         });
 
-		embedded_svc.settings.defaultMinimizedText = 'Chat with an expert'; //(Defaults to Chat with an Expert)
-		embedded_svc.settings.disabledMinimizedText = 'Chat Unavailable'; //(Defaults to Agent Offline)
+        embedded_svc.init(
+          'https://pfizermedinfo--test.sandbox.my.salesforce.com',
+          'https://pfizermedinfo--test.sandbox.my.salesforce-sites.com/livechat',
+          gslbBaseURL,
+          '00D3O0000008lHx',
+          'PFZ_United_Kingdom',
+          {
+            baseLiveAgentContentURL: 'https://c.la2-c1cs-fra.salesforceliveagent.com/content',
+            deploymentId: '5723O000000Caf0',
+            buttonId: '5733O000000CapO',
+            baseLiveAgentURL: 'https://d.la2-c1cs-fra.salesforceliveagent.com/chat',
+            eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I3O000000CaoRUAS_1836c312ac5',
+            isOfflineSupportEnabled: false
+          }
+        );
+      };
 
-		//embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
-		//embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
-
-		// Settings for Chat
-		//embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
-			// Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
-			// Returns a valid button ID.
-		//};
-		embedded_svc.settings.prepopulatedPrechatFields = { //Sets the auto-population of pre-chat form fields
-		    PFZ_Are_You_HCP__c: "Yes"
-		};
-		
-		//embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
-		//embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
-
-		embedded_svc.settings.enabledFeatures = ['LiveAgent'];
-		embedded_svc.settings.entryFeature = 'LiveAgent';
-
-		let disclaimerText =
-		    'Pfizer respects your privacy and protects your personal data, our Privacy Policy is found at ';
-		let disclaimerLink = 'https://privacycenter.pfizer.com/en/';
-
-		embedded_svc.addEventHandler('afterMaximize', function (data) {
-		    console.log('afterMaximize event was fired.');
-		    if (!document.getElementById('chat_disclaimer')) {
-		        let disclaimerElement = document.createElement('p');
-		        disclaimerElement.id = 'chat_disclaimer';
-		        disclaimerElement.style.padding = '5px';
-		        disclaimerElement.appendChild(document.createTextNode(disclaimerText));
-
-		        let a = document.createElement('a');
-		        let linkText = document.createTextNode(disclaimerLink);
-		        a.appendChild(linkText);
-		        a.title = disclaimerLink;
-		        a.href = disclaimerLink;
-		        disclaimerElement.appendChild(a);
-
-		        let sidebar = document.querySelector(
-		            'div.formContent.embeddedServiceSidebarForm'
-		        );
-
-		        sidebar.insertBefore(disclaimerElement, sidebar.childNodes[0]);
-		    }
-		});
-
-		embedded_svc.init(
-			'https://pfizermedinfo--upgrade.sandbox.my.salesforce.com',
-			'https://pfizermedinfo--upgrade.sandbox.my.salesforce-sites.com/livechat',
-			gslbBaseURL,
-			'00D0Q0000008fRA',
-			'PFZ_United_Kingdom',
-			{
-				baseLiveAgentContentURL: 'https://c.la1-c1cs-fra.salesforceliveagent.com/content',
-				deploymentId: '5720Q00000000Lv',
-				buttonId: '5730Q0000000CRq',
-				baseLiveAgentURL: 'https://d.la1-c1cs-fra.salesforceliveagent.com/chat',
-				eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I0Q0000004DBZUA2_182ea714ecc',
-				isOfflineSupportEnabled: false
-			}
-		);
-	};
-
-	if (!window.embedded_svc) {
-		var s = document.createElement('script');
-		s.setAttribute('src', 'https://pfizermedinfo--upgrade.sandbox.my.salesforce.com/embeddedservice/5.0/esw.min.js');
-		s.onload = function() {
-			initESW(null);
-		};
-		document.body.appendChild(s);
-	} else {
-		initESW('https://service.force.com');
-	}
-</script>
+      if (!window.embedded_svc) {
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://pfizermedinfo--test.sandbox.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+        s.onload = function() {
+          initESW(null);
+        };
+        document.body.appendChild(s);
+      } else {
+        initESW('https://service.force.com');
+      }
+    </script>
   </body>
 </html>
