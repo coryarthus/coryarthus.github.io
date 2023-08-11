@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat Salesforce Sans</title>
+    </head>
+    <body>
+	    <h1>This page implements the <strong>CTA Embedded Service Deployment</strong> Embedded Service Deployment, which uses Salesforce Sans font.</h1>
+
+<style type='text/css'>
+
+@font-face {
+    font-family: 'Salesforce Sans';
+    src: url('https://coryarthus.github.io/css/fsalbert_regular-webfont.woff2') format('woff2'),
+         url('https://coryarthus.github.io/css/fsalbert_regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+	p, h1 {
+		font-family: "Salesforce Sans", sans-serif;
+	}
+</style>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi gravida, metus ut laoreet ornare, mi leo finibus enim, at placerat nunc mi eu elit. Donec diam ex, pretium ac nulla at, sollicitudin commodo velit. Duis id nulla ullamcorper, faucibus neque quis, iaculis quam. Aenean nisi sem, ornare vitae sem non, placerat tempus nulla. Nam consectetur, risus at hendrerit finibus, justo lectus volutpat massa, vel tincidunt risus enim at elit. Morbi volutpat, augue at cursus finibus, ipsum purus ultricies nulla, eget varius sem dolor eget enim. Ut sagittis, lorem ac rutrum lobortis, velit tellus scelerisque mauris, sed gravida tellus dui nec urna. Suspendisse tellus erat, scelerisque quis mauris nec, posuere vehicula urna. Nunc at ante sit amet tellus tempor venenatis. Suspendisse sed dapibus nunc. Donec magna neque, mattis ut venenatis in, imperdiet sit amet tellus. Fusce nisi velit, tristique nec dui a, aliquam consectetur eros. In hac habitasse platea dictumst.</p>
+
+<p>Phasellus ac ultrices nisl. Nulla pellentesque non metus sit amet porta. Fusce gravida auctor rutrum. Fusce nisl arcu, facilisis quis ex sit amet, elementum blandit tortor. Nulla facilisi. Suspendisse in velit risus. Pellentesque euismod elit aliquet mi pulvinar rhoncus. Vestibulum non libero dignissim mauris semper vulputate. Ut dapibus neque elit, eu semper arcu suscipit at. Fusce sapien quam, rutrum eu vehicula in, suscipit non leo. Nam at dictum risus, vitae elementum nisi. Sed ac enim viverra, dictum turpis eget, commodo sem. Praesent ac dui a odio tempor molestie sit amet eu dolor. Fusce quis dolor malesuada, consequat risus non, pretium risus. Aenean eu tortor sagittis, pharetra magna vel, vehicula ligula.</p>
+
+<p>Donec nec mi sodales, pretium ante tincidunt, elementum urna. Pellentesque in laoreet ligula, vitae ullamcorper ante. Nulla nisl dui, ornare at lacus in, egestas lacinia nisl. Praesent a justo nisl. In nec sollicitudin turpis. Ut luctus sem ipsum, in gravida nunc ultricies et. Vivamus pretium eros diam, at elementum mi semper in. Pellentesque lacinia tincidunt mi, finibus rutrum erat varius quis. Suspendisse feugiat ante nec sagittis rhoncus. Nulla dignissim rhoncus volutpat. Aliquam tincidunt tincidunt est, vitae consequat mauris tempus eu. Quisque metus augue, lobortis dictum ipsum quis, consectetur scelerisque est. Donec rhoncus ipsum eget tellus consectetur molestie. Ut lobortis facilisis lorem quis varius. Etiam dapibus convallis augue, nec vestibulum est sollicitudin a. Phasellus feugiat quam id gravida elementum.</p>
+
+<style type='text/css'>
+	.embeddedServiceHelpButton .helpButton .uiButton {
+		background-color: #005290;
+		font-family: "Salesforce Sans", sans-serif;
+	}
+	.embeddedServiceHelpButton .helpButton .uiButton:focus {
+		outline: 1px solid #005290;
+	}
+	@font-face {
+		font-family: 'Salesforce Sans';
+		src: url('https://c1.sfdcstatic.com/etc/clientlibs/sfdc-aem-master/clientlibs_base/fonts/SalesforceSans-Regular.woff') format('woff'),
+		url('https://c1.sfdcstatic.com/etc/clientlibs/sfdc-aem-master/clientlibs_base/fonts/SalesforceSans-Regular.ttf') format('truetype');
+	}
+</style>
+
+<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+<script type='text/javascript'>
+	var initESW = function(gslbBaseURL) {
+		embedded_svc.settings.displayHelpButton = true; //Or false
+		embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
+
+		//embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
+		//embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
+
+		//embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+		//embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
+
+		// Settings for Chat
+		//embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+			// Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+			// Returns a valid button ID.
+		//};
+		//embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+		//embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+		//embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
+
+		embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+		embedded_svc.settings.entryFeature = 'LiveAgent';
+
+		embedded_svc.init(
+			'https://pfizermedinfo--corytest.sandbox.my.salesforce.com',
+			'https://pfizermedinfo--corytest.sandbox.my.site.com/',
+			gslbBaseURL,
+			'00D5r0000004Ycj',
+			'CTA_ESD_SalesforceSans',
+			{
+				baseLiveAgentContentURL: 'https://c.la3-c1cs-fra.salesforceliveagent.com/content',
+				deploymentId: '5725r000000L1NE',
+				buttonId: '5735r000000Kz2w',
+				baseLiveAgentURL: 'https://d.la3-c1cs-fra.salesforceliveagent.com/chat',
+				eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I5r000000Kz7fEAC_189e4e724ae',
+				isOfflineSupportEnabled: false
+			}
+		);
+	};
+
+	if (!window.embedded_svc) {
+		var s = document.createElement('script');
+		s.setAttribute('src', 'https://pfizermedinfo--corytest.sandbox.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+		s.onload = function() {
+			initESW(null);
+		};
+		document.body.appendChild(s);
+	} else {
+		initESW('https://service.force.com');
+	}
+</script>
+    </body>
+
+</html>
