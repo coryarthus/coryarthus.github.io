@@ -45,11 +45,11 @@ var downloadTimer = setInterval(function(){
 		<button type="button" id="closeInvite" class="embeddedServiceCloseIcon" aria-label="Exit invitation">&times;</button>
 	</div>
 	<div class="embeddedServiceInvitationBody">
-		<p id="snapins_bodytext">Click Start Chat to chat live with our Medical Information team</p>
+		<p id="snapins_bodytext">Benötigen Sie Hilfe? Klicken Sie hier, um Medical Information via Live Chat zu kontaktieren (Montag – Freitag 8:00 – 17:00 Uhr; nicht an Feiertagen)</p>
 	</div>
 	<div class="embeddedServiceInvitationFooter" aria-describedby="snapins_bodytext">
-		<button type="button" class="embeddedServiceActionButton" id="rejectInvite">No Thanks</button>
-		<button type="button" class="embeddedServiceActionButton" id="acceptInvite">Start Chat</button>
+		<button type="button" class="embeddedServiceActionButton" id="acceptInvite">Start Live Chat</button>
+		<button type="button" class="embeddedServiceActionButton" id="rejectInvite">Abbrechen</button>
 	</div>
 </div>
 
@@ -85,7 +85,7 @@ var downloadTimer = setInterval(function(){
 <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
 <script type='text/javascript'>
 	var initESW = function(gslbBaseURL) {
-		embedded_svc.settings.displayHelpButton = true; //Or false
+		embedded_svc.settings.displayHelpButton = false; //Or false
 		embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
 
 		//embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
