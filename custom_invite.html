@@ -53,7 +53,7 @@ var downloadTimer = setInterval(function(){
 	</div>
 </div>
 
-<button type="button" class="embeddedServiceActionButton" id="acceptInvite">Start Live Chat Now Without Waiting</button>
+<button type="button" class="embeddedServiceActionButton" id="acceptInvite2">Start Live Chat Now Without Waiting</button>
 
 <style type='text/css'>
 	#snapins_invite { background-color: pink; font-family: "Arial", sans-serif; overflow: visible; border-radius: 8px; visibility: hidden; }
@@ -79,6 +79,7 @@ var downloadTimer = setInterval(function(){
 		document.getElementById('closeInvite').onclick = function() { embedded_svc.inviteAPI.inviteButton.rejectInvite(); };
 		document.getElementById('rejectInvite').onclick = function() { embedded_svc.inviteAPI.inviteButton.rejectInvite(); }; // use this API call to reject invitations
 		document.getElementById('acceptInvite').onclick = function() { embedded_svc.inviteAPI.inviteButton.acceptInvite(); }; // use this API call to start chat from invitations
+		document.getElementById('acceptInvite2').onclick = function() { embedded_svc.inviteAPI.inviteButton.acceptInvite(); }; // use this API call to start chat from invitations
 		document.addEventListener('keyup', function(event) { if (event.keyCode == 27) { embedded_svc.inviteAPI.inviteButton.rejectInvite(); }})
 	})();
 </script>
