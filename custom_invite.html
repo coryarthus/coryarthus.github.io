@@ -41,11 +41,11 @@ var downloadTimer = setInterval(function(){
 <div class="embeddedServiceInvitation" id="snapins_invite" inert="true" aria-live="assertive" role="dialog" aria-atomic="true">
 	<div class="embeddedServiceInvitationHeader" aria-labelledby="snapins_titletext" aria-describedby="snapins_bodytext">
 		<img id="embeddedServiceAvatar"></img>
-		<span class="embeddedServiceTitleText" id="snapins_titletext">Need help?</span>
+		<span class="embeddedServiceTitleText" id="snapins_titletext">Benötigen Sie Hilfe?</span>
 		<button type="button" id="closeInvite" class="embeddedServiceCloseIcon" aria-label="Exit invitation">&times;</button>
 	</div>
 	<div class="embeddedServiceInvitationBody">
-		<p id="snapins_bodytext">Benötigen Sie Hilfe? Klicken Sie hier, um Medical Information via Live Chat zu kontaktieren (Montag – Freitag 8:00 – 17:00 Uhr; nicht an Feiertagen)</p>
+		<p id="snapins_bodytext">Klicken Sie hier, um Medical Information via Live Chat zu kontaktieren (Montag – Freitag 8:00 – 17:00 Uhr; nicht an Feiertagen)</p>
 	</div>
 	<div class="embeddedServiceInvitationFooter" aria-describedby="snapins_bodytext">
 		<button type="button" class="embeddedServiceActionButton" id="acceptInvite">Start Live Chat</button>
@@ -134,6 +134,7 @@ var downloadTimer = setInterval(function(){
 		initESW('https://service.force.com');
 	}
 </script>
+<p>Click <a href="#" onclick="embedded_svc.inviteAPI.inviteButton.acceptInvite(); return false;">here</a> to start immediately.</p>
 	</body>
 
 </html>
