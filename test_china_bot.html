@@ -4,8 +4,7 @@
         <title>Test China Bot</title>
     </head>
     <body>
-	    <h1>Test China Bot.</h1>
-	    <style type='text/css'>
+	    <h1>Test China Bot...</h1><style type='text/css'>
 	.embeddedServiceHelpButton .helpButton .uiButton {
 		background-color: #64CBED;
 		font-family: "FSAlbert", sans-serif;
@@ -16,10 +15,30 @@
 </style>
 
 <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+<script type="text/javascript" src="https://pfizermedinfo--test.sandbox.my.salesforce-sites.com/livechat/resource/chatbot_functions"></script>
 <script type='text/javascript'>
-	var initESW = function(gslbBaseURL) {
+    var initESW = function(gslbBaseURL) {
+
+    handleChatbot();
+  
+    hideFooter();
+    setIsFooterVisible(false);
+      
+    embedded_svc.settings.widgetWidth = "435px";
+    embedded_svc.settings.widgetHeight = "100%";  
+
 		embedded_svc.settings.displayHelpButton = true; //Or false
-		embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
+    embedded_svc.settings.language = 'zh_cn'; //For example, enter 'en' or 'en-US'
+    embedded_svc.settings.extraPrechatFormDetails = [{
+        'label': 'Channel Details',
+        'value': 'TEST CN MI Virtual Agent',
+        'transcriptFields': ['PFZ_Chat_Channel_Details__c']
+      }, {
+        'label': 'Country',
+        'value': 'CN',
+        'transcriptFields': ['PFZ_Country__c']
+      }];
+    embedded_svc.settings.chatbotAvatarImgURL = "https://pfizermedinfo--test.sandbox.my.salesforce-sites.com/livechat/resource/ChinaBotAvatar"; 
 
 		//embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
 		//embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
@@ -66,7 +85,6 @@
 	} else {
 		initESW('https://service.force.com');
 	}
-</script>
-    </body>
+</script>    </body>
 
 </html>
