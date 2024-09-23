@@ -13,8 +13,7 @@
     // Send data to Salesforce
     embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"Channel_Details" : "pfizer.de"});
     embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"ISO_Country" : "DE"});
-    embeddedservice_bootstrap.utilAPI.hideChatButton();
-
+    
     });
 
 	function initEmbeddedMessaging() {
@@ -29,6 +28,7 @@
 					scrt2URL: 'https://pfizermedinfo--upgrade.sandbox.my.salesforce-scrt.com'
 				}
 			);
+			embeddedservice_bootstrap.utilAPI.hideChatButton();
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
