@@ -6,6 +6,9 @@
     <body>
 	    <h1>GRACE test - pfizer.de - Germany Messaging for Web</h1>
 
+	    <p>Click <a href="#" onclick="embeddedservice_bootstrap.utilAPI.hideChatButton(); return false;">here</a> to hide the button.</p>
+
+	    
 <script type='text/javascript'>
       window.addEventListener("onEmbeddedMessagingReady", () => {
         console.log("Received the onEmbeddedMessagingReady event…");
@@ -28,7 +31,7 @@
 					scrt2URL: 'https://pfizermedinfo--upgrade.sandbox.my.salesforce-scrt.com'
 				}
 			);
-			embeddedservice_bootstrap.utilAPI.hideChatButton();
+			
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
