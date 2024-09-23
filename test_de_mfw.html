@@ -13,28 +13,29 @@
     // Send data to Salesforce
     embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"Channel_Details" : "pfizer.de"});
     embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"ISO_Country" : "DE"});
-   // embeddedservice_bootstrap.utilAPI.hideChatButton();
+    embeddedservice_bootstrap.utilAPI.hideChatButton();
 
     });
-    function initEmbeddedMessaging() {
-        try {
-            embeddedservice_bootstrap.settings.language = 'de'; // For example, enter 'en' or 'en-US'
 
-            embeddedservice_bootstrap.init(
-                '00D3O0000008lHx',
-                'PFZ_Germany_Messaging_for_Web',
-                'https://pfizermedinfo--test.sandbox.my.site.com/ESWPFZGermanyMessaging1712838499463',
-                {
-                    scrt2URL: 'https://pfizermedinfo--test.sandbox.my.salesforce-scrt.com'
-                }
-            );
-        } catch (err) {
-            console.error('Error loading Embedded Messaging: ', err);
-        }
-    };
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'de'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00D0Q0000008fRA',
+				'PFZ_Germany_Messaging_for_Web',
+				'https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWPFZGermanyMessaging1711558494775',
+				{
+					scrt2URL: 'https://pfizermedinfo--upgrade.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
 </script>
-<script type='text/javascript' src='https://pfizermedinfo--test.sandbox.my.site.com/ESWPFZGermanyMessaging1712838499463/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-
+<script type='text/javascript' src='https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWPFZGermanyMessaging1711558494775/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+	    
     </body>
 
 </html>
