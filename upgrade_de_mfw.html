@@ -38,8 +38,8 @@
 		}
 	};
 
-	window.addEventListener("onEmbeddedMessagingConversationCreated", (event) => {
-  console.log("Received the onEmbeddedMessagingConversationCreated event…");
+	window.addEventListener("onEmbeddedMessagingConversationOpened", () => {
+  console.log("Received the onEmbeddedMessagingConversationOpened event…");
   console.log("Event detail: ", event.detail);
   alert("hello");
   var emf = document.getElementById("embeddedMessagingFrame");
