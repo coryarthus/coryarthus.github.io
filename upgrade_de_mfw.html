@@ -42,10 +42,11 @@
   console.log("Received the onEmbeddedMessagingConversationCreated event…");
   console.log("Event detail: ", event.detail);
   alert("hello");
+  document.getElementById("embeddedMessagingFrame").getElementsByTagName("textarea")[0].disabled=true;
   // Do something...
 });
 
-	document.getElementById("embeddedMessagingFrame").getElementsByTagName("textarea")[0].disabled=true;
+	
 </script>
 <script type='text/javascript' src='https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWPFZGermanyMessaging1711558494775/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 	    
