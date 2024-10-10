@@ -43,7 +43,7 @@
   console.log("Event detail: ", event.detail);
   var emf = document.getElementById("embeddedMessagingFrame");
   console.log("emf: ", emf);
-  var ta = emf.getElementsByTagName("textarea").length;
+  var ta = emf.document.getElementsByTagName("textarea").length;
   console.log("ta: ", ta);
 
 // Store the web element
