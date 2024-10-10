@@ -43,8 +43,8 @@
   console.log("Event detail: ", event.detail);
   var emf = document.getElementById("embeddedMessagingFrame");
   console.log("emf: ", emf);
-  var ta = emf.getElementsByTagName("textarea")[0];
-  console.log("emf: ", ta);
+  var ta = emf.getElementsByTagName("textarea").length;
+  console.log("ta: ", ta);
   alert("done");
   // Do something...
 });
