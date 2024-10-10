@@ -38,7 +38,7 @@
 		}
 	};
 
-	window.addEventListener("onEmbeddedMessagingReady", (event) => {
+	window.addEventListener("onEmbeddedMessagingConversationCreated", (event) => {
   console.log("Received the onEmbeddedMessagingConversationCreated event…");
   console.log("Event detail: ", event.detail);
   alert("hello");
