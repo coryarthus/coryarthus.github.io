@@ -45,6 +45,13 @@
   console.log("emf: ", emf);
   var ta = emf.getElementsByTagName("textarea").length;
   console.log("ta: ", ta);
+
+// Store the web element
+const iframe = driver.findElement(By.id('embeddedMessagingFrame'));
+
+// Switch to the frame
+await driver.switchTo().frame(iframe);
+		
   alert("done");
   // Do something...
 });
