@@ -41,10 +41,11 @@
 	window.addEventListener("onEmbeddedMessagingConversationOpened", () => {
   console.log("Received the onEmbeddedMessagingConversationOpened event…");
   console.log("Event detail: ", event.detail);
-  alert("hello");
   var emf = document.getElementById("embeddedMessagingFrame");
   console.log("emf: ", emf);
- // .getElementsByTagName("textarea")[0].disabled=true;
+  var ta = emf.getElementsByTagName("textarea")[0];
+  console.log("emf: ", ta);
+  alert("done");
   // Do something...
 });
 
