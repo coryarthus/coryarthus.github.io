@@ -1,112 +1,72 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>JP Live Chat Test</title>
+        <title>JP Live Chat - upgrade</title>
     </head>
     <body>
-	    <h1>JP Live Chat Test</h1>
+	    <h1>JP Live Chat - upgrade</h1>
+
 <style type='text/css'>
-    .embeddedServiceHelpButton .helpButton .uiButton {
-        background-color: #64CBED;
-        font-family: "FSAlbert", sans-serif;
-        width: 600px;
-        max-width: 600px;
-    }
-    .embeddedServiceHelpButton .helpButton .uiButton:focus {
-        outline: 1px solid #64CBED;
-    }
-    .japanbullet {
-        display: list-item !important;
-        list-style: disc !important;
-        margin: 1.5rem !important;
-    }
+	.embeddedServiceHelpButton .helpButton .uiButton {
+		background-color: #64CBED;
+		font-family: "FSAlbert", sans-serif;
+	}
+	.embeddedServiceHelpButton .helpButton .uiButton:focus {
+		outline: 1px solid #64CBED;
+	}
 </style>
 
 <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
-<script type="text/javascript" src="https://pfizermedinfo--test.sandbox.my.salesforce-sites.com/livechat/resource/prechatSettings_Japan"></script>
-
 <script type='text/javascript'>
-    var initESW = function(gslbBaseURL) {
-    
-        embedded_svc.settings.widgetWidth = "435px";
-        embedded_svc.settings.widgetHeight = "100%";
-        
-        embedded_svc.settings.displayHelpButton = true; //Or false
-        embedded_svc.settings.language = 'ja'; //For example, enter 'en' or 'en-US'
+	var initESW = function(gslbBaseURL) {
+		embedded_svc.settings.displayHelpButton = true; //Or false
+		embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
 
-        embedded_svc.settings.extraPrechatFormDetails.push({
-            value: 'Japan PMI Site',
-            transcriptFields: ['PFZ_Chat_Channel_Details__c']
-        });
+		//embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
+		//embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
 
-        embedded_svc.settings.defaultMinimizedText = '担当者とのチャットを開始する'; //(Defaults to Chat with an Expert)
-        embedded_svc.settings.disabledMinimizedText = '現在担当者とのチャットはご利用いただけません'; //(Defaults to Agent Offline)
+		//embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+		//embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
 
-        //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
-        //embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
+		// Settings for Chat
+		//embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+			// Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+			// Returns a valid button ID.
+		//};
+		//embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+		//embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+		//embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
 
-        // Settings for Chat
-        //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
-            // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
-            // Returns a valid button ID.
-        //};
-        //embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
-        //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
-        //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
+		embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+		embedded_svc.settings.entryFeature = 'LiveAgent';
 
-        embedded_svc.settings.enabledFeatures = ['LiveAgent'];
-        embedded_svc.settings.entryFeature = 'LiveAgent';
+		embedded_svc.init(
+			'https://pfizermedinfo--upgrade.sandbox.my.salesforce.com',
+			'https://pfizermedinfo--upgrade.sandbox.my.salesforce-sites.com/livechat',
+			gslbBaseURL,
+			'00D9V00000D7QJF',
+			'PFZ_Japan',
+			{
+				baseLiveAgentContentURL: 'https://c.la12s-core1.sfdc-yzvdd4.salesforceliveagent.com/content',
+				deploymentId: '57268000000Guiv',
+				buttonId: '57368000000L6xc',
+				baseLiveAgentURL: 'https://d.la12s-core1.sfdc-yzvdd4.salesforceliveagent.com/chat',
+				eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I68000000GorOEAS_18ac3801a13',
+				isOfflineSupportEnabled: false
+			}
+		);
+	};
 
-        let disclaimerText =
-        `<ul>
-            <li class="japanbullet">弊社ウェブサイトのコンテンツの箇所・アクセス方法をナビゲートします。該当のコンテンツの掲載が無い場合や、チャットでの回答が出来かねる場合は、電話・メールにてご回答いたします。</li>
-            <li class="japanbullet">弊社では、ご入力内容を記録・保管しております。収集したデータは、適切な情報提供活動や製品やサービスの向上のためのアンケートの送付の他、<a href="https://www.pfizer.co.jp/pfizer/privacy/purpose" target="_blank">プライバシーポリシー</a>に記載の利用目的の範囲で利用させていただいております。</li>
-            <li class="japanbullet"><a href="https://www.pfizermedicalinformation.jp/ja-jp/contact-us" target="_blank">お問い合わせページ</a>の記載事項についてご了承の上、チャットのご利用をお願い申し上げます。</li>
-        </ul>`;
-        
-        embedded_svc.addEventHandler('afterMaximize', function (data) {
-
-            if (!document.getElementById('chat_disclaimer')) {
-                let disclaimerElement = document.createElement('p');
-                disclaimerElement.id = 'chat_disclaimer';
-                disclaimerElement.style.padding = '5px';
-                disclaimerElement.innerHTML = disclaimerText;
-
-                let sidebar = document.querySelector(
-                    'div.formContent.embeddedServiceSidebarForm'
-                );
-
-                sidebar.insertBefore(disclaimerElement, sidebar.childNodes[0]);
-            }
-        });
-
-        embedded_svc.init(
-            'https://pfizermedinfo--test.sandbox.my.salesforce.com',
-            'https://pfizermedinfo--test.sandbox.my.salesforce-sites.com/livechat',
-            gslbBaseURL,
-            '00D3O0000008lHx',
-            'PFZ_Japan',
-            {
-                baseLiveAgentContentURL: 'https://c.la2-c1cs-cdg.salesforceliveagent.com/content',
-                deploymentId: '5723O000000Ch5O',
-                buttonId: '5733O000000Cb2N',
-                baseLiveAgentURL: 'https://d.la2-c1cs-cdg.salesforceliveagent.com/chat',
-                eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I3O000000Cb2ZUAS_18a09d941c1',
-                isOfflineSupportEnabled: false
-            }
-        );
-    };
-
-    if (!window.embedded_svc) {
-        var s = document.createElement('script');
-        s.setAttribute('src', 'https://pfizermedinfo--test.sandbox.my.salesforce.com/embeddedservice/5.0/esw.min.js');
-        s.onload = function() {
-            initESW(null);
-        };
-        document.body.appendChild(s);
-    } else {
-        initESW('https://service.force.com');
-    }
+	if (!window.embedded_svc) {
+		var s = document.createElement('script');
+		s.setAttribute('src', 'https://pfizermedinfo--upgrade.sandbox.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+		s.onload = function() {
+			initESW(null);
+		};
+		document.body.appendChild(s);
+	} else {
+		initESW('https://service.force.com');
+	}
 </script>
 
     </body>
