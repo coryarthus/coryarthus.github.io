@@ -7,55 +7,68 @@
   <title>HTML5 Boilerplate</title>
 
 <script>
+  // Listen for messages from the iframe
+  window.addEventListener("message", (event) => {
+    console.log("📨 Received message event:", event);
 
-//event listener which listens to every message/event from the Iframe
+    try {
+      const method = event.data?.method;
+      const entryPayload = event.data?.data?.eventDetails?.conversationEntry?.entryPayload;
 
-window.addEventListener("message", (event) => {
+      if (method === "EMBEDDED_MESSAGING_DISPATCH_EVENT_TO_HOST" && entryPayload) {
+        console.log("✅ Valid method and payload found");
 
-if ((event.data.method === "EMBEDDED_MESSAGING_DISPATCH_EVENT_TO_HOST" && event.data.data.eventDetails.conversationEntry && event.data.data.eventDetails.conversationEntry.entryPayload)) {
+        let payload;
+        try {
+          payload = JSON.parse(entryPayload);
+          console.log("🧾 Parsed payload:", payload);
+        } catch (parseError) {
+          console.error("❌ Failed to parse entryPayload:", parseError);
+          return;
+        }
 
-let payload = JSON.parse(event.data.data.eventDetails.conversationEntry.entryPayload)
+        const abstractMessage = payload?.abstractMessage;
 
-    if( payload.abstractMessage && payload.abstractMessage.choices) {
-
-postIframeDisable();
-
-}
-
-    else if(payload.abstractMessage && payload.abstractMessage.choicesResponse){
-
-       postIframeEnable();
-
+        if (abstractMessage?.choices) {
+          console.log("🚫 Disabling input (choices detected)");
+          postIframeDisable();
+        } else if (abstractMessage?.choicesResponse) {
+          console.log("✅ Enabling input (choicesResponse detected)");
+          postIframeEnable();
+        } else {
+          console.log("ℹ️ No actionable message type found in payload");
+        }
+      } else {
+        console.log("⛔ Message did not match expected structure or method");
+      }
+    } catch (err) {
+      console.error("💥 Unexpected error in message handler:", err);
     }
+  });
 
-}
+  // Function to enable user input
+  function postIframeEnable() {
+    const iframe = document.getElementById("embeddedMessagingFrame");
+    if (iframe?.contentWindow) {
+      console.log("📤 Sending 'InputEnable' to iframe");
+      iframe.contentWindow.postMessage("InputEnable", "*");
+    } else {
+      console.warn("⚠️ Iframe not found or not ready");
+    }
+  }
 
-});
-
-
-//posting message to enable user input
-
-function postIframeEnable(){
-
-var iframe = document.getElementById("embeddedMessagingFrame");
-
-   iframe.contentWindow.postMessage('InputEnable');
-
-}
-
- 
-
-//posting message to disable user input
-
-function postIframeDisable(){
-
-var iframe = document.getElementById("embeddedMessagingFrame");
-
-   iframe.contentWindow.postMessage('InputDisable');
-
-}
-
+  // Function to disable user input
+  function postIframeDisable() {
+    const iframe = document.getElementById("embeddedMessagingFrame");
+    if (iframe?.contentWindow) {
+      console.log("📤 Sending 'InputDisable' to iframe");
+      iframe.contentWindow.postMessage("InputDisable", "*");
+    } else {
+      console.warn("⚠️ Iframe not found or not ready");
+    }
+  }
 </script>
+
 
 </head>
 
