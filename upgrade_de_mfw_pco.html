@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GRACE upgrade - pfizer.de - Germany Messaging for Web</title>
+    </head>
+    <body>
+	    <h1>GRACE upgrade - pfizer.de - Germany Messaging for Web</h1>
+
+<script type='text/javascript'>
+window.addEventListener("onEmbeddedMessagingReady", e => {
+    embeddedservice_bootstrap.settings.enableUserInputForConversationWithBot = false;    
+    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+        input_ChannelDetails: "Pfizer.de",
+        input_Country: "DE",
+        input_Email: "",
+        input_ISOCountry: "DE",
+        input_Product: "",
+        input_FirstName: "",
+        input_RequesterType: "",
+        input_LastName: ""
+    });
+});
+     function initEmbeddedMessaging() {
+          try {
+               embeddedservice_bootstrap.settings.language = 'de'; // For example, enter 'en' or 'en-US'
+
+               embeddedservice_bootstrap.init(
+                    '00D9V00000D7QJF',
+                    'DE_Messaging_for_Web',
+                    'https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831',
+                    {
+                         scrt2URL: 'https://pfizermedinfo--upgrade.sandbox.my.salesforce-scrt.com'
+                    }
+               );
+          } catch (err) {
+               console.error('Error loading Embedded Messaging: ', err);
+          }
+     };
+</script>
+<script type='text/javascript' src='https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+	    
+    </body>
+
+</html>

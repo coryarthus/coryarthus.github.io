@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GRACE upgrade - pfizer.de - Germany Messaging for Web</title>
+    </head>
+    <body>
+	    <h1>GRACE upgrade - pfizer.de - Germany Messaging for Web</h1>
+
+	    <p>Click <a href="#" onclick="embeddedservice_bootstrap.utilAPI.launchChat(); return false;">here</a> to launch the chat.</p>
+
+	    
+<script type='text/javascript'>
+      window.addEventListener("onEmbeddedMessagingReady", () => {
+        console.log("Received the onEmbeddedMessagingReady event…");
+
+    // Send data to Salesforce
+    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"Channel_Details" : "pfizer.de"});
+    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"ISO_Country" : "DE"});
+    //embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
+    
+    });
+
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'de'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00D0Q0000008fRA',
+				'PFZ_Germany_Messaging_for_Web',
+				'https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWPFZGermanyMessaging1711558494775',
+				{
+					scrt2URL: 'https://pfizermedinfo--upgrade.sandbox.my.salesforce-scrt.com'
+				}
+			);
+			
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+
+	window.addEventListener("onEmbeddedMessagingConversationOpened", () => {
+  console.log("Received the onEmbeddedMessagingConversationOpened event…");
+  console.log("Event detail: ", event.detail);
+  var emf = document.getElementById("embeddedMessagingFrame");
+  console.log("emf: ", emf);
+  var ta = emf.document.getElementsByTagName("textarea").length;
+  console.log("ta: ", ta);
+		
+  alert("done");
+  // Do something...
+});
+
+	
+</script>
+<script type='text/javascript' src='https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWPFZGermanyMessaging1711558494775/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+	    
+    </body>
+
+</html>
