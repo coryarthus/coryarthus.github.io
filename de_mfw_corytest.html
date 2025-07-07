@@ -5,35 +5,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HTML5 Boilerplate</title>
-</head>
-
-<body>
-  <h1>Page Title</h1>
-</body>
-
-<script type='text/javascript'>
-	function initEmbeddedMessaging() {
-		try {
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
-
-			embeddedservice_bootstrap.init(
-				'00D9O00000E20tZ',
-				'DE_Messaging_for_Web',
-				'https://pfizermedinfo--corytest.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831',
-				{
-					scrt2URL: 'https://pfizermedinfo--corytest.sandbox.my.salesforce-scrt.com'
-				}
-			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
-</script>
-<script type='text/javascript' src='https://pfizermedinfo--corytest.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-
-
-
-
 
 <script>
 
@@ -86,5 +57,30 @@ var iframe = document.getElementById("embeddedMessagingFrame");
 
 </script>
 
+</head>
+
+<body>
+  <h1>Page Title</h1>
+</body>
+
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00D9O00000E20tZ',
+				'DE_Messaging_for_Web',
+				'https://pfizermedinfo--corytest.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831',
+				{
+					scrt2URL: 'https://pfizermedinfo--corytest.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://pfizermedinfo--corytest.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
 </html>
