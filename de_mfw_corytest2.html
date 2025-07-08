@@ -82,31 +82,6 @@ window.addEventListener("message", function(event) {
     }
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        for (const node of mutation.addedNodes) {
-          if (
-            node.nodeType === Node.ELEMENT_NODE &&
-            node.tagName === "EMBEDDEDMESSAGING-CONVERSATION-ENTRY-ITEM"
-          ) {
-            console.log("found a conversation entry item element");
-            const text = node.textContent || "";
-            if (text.includes("[[PFZ_ENABLE_INPUT]]") || text.includes("[[PFZ_DISABLE_INPUT]]")) {
-              node.style.display = "none";
-            }
-          }
-        }
-      }
-    });
-
-    // Now that the DOM is ready, observe the body
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-  });
-
 </script>
 
 
