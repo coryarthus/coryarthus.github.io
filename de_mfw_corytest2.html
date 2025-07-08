@@ -8,19 +8,6 @@
 
 <script type="text/javascript">
 
-const style = document.createElement('style');
-//style.textContent = `
-//    .embeddedMessagingMessage:has(.slds-rich-text:contains("[[..triggerCustomEvent..]]")) {
-//        display: none !important;
-//    }
-//`;
-
-style.textContent = `
-    embeddedmessaging-conversation-entry-item:has(.slds-rich-text:contains("[[..triggerCustomEvent..]]")) {
-        display: none !important;
-    }
-`;
-
 document.head.appendChild(style);
 
 window.addEventListener("message", function(event) {
@@ -96,6 +83,32 @@ window.addEventListener("message", function(event) {
       }
     }
   });
+
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    mutation.addedNodes.forEach((node) => {
+      if (node.nodeType === 1) {
+        const messages = node.querySelectorAll("embeddedmessaging-conversation-text-message lightning-formatted-rich-text span p");
+        messages.forEach((msg) => {
+          const text = msg.textContent || "";
+          // Customize this condition to match your trigger message
+          if (text.includes("[[PFZ_ENABLE_INPUT]]")) {
+            const entryItem = msg.closest("embeddedmessaging-conversation-entry-item");
+            if (entryItem) {
+              entryItem.style.display = "none"; // or use entryItem.remove() to delete it
+            }
+          }
+        });
+      }
+    });
+  });
+});
+
+const targetNode = document.querySelector("embeddedmessaging-conversation-log ul");
+if (targetNode) {
+  observer.observe(targetNode, { childList: true, subtree: true });
+}
+
 
 
 </script>
