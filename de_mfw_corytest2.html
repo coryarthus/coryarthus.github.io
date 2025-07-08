@@ -10,7 +10,7 @@
 
 const style = document.createElement('style');
 style.textContent = `
-    .embeddedMessagingMessage:has(.slds-rich-text:contains("~~triggerCustomEvent~~")) {
+    .embeddedMessagingMessage:has(.slds-rich-text:contains("[[..triggerCustomEvent..]]")) {
         display: none !important;
     }
 `;
@@ -22,7 +22,7 @@ window.addEventListener("message", function(event) {
     if (
         event.data &&
         event.data.type === "EmbeddedMessagingBotMessage" &&
-        event.data.message === "~~triggerCustomEvent~~"
+        event.data.message === "[[..triggerCustomEvent..]]"
     ) {
         const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
             detail: {
