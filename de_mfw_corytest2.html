@@ -59,7 +59,7 @@
     
     if (messagesContainer) {
         const newMessage = messagesContainer.cloneNode(true);
-        newMessage.innerHTML = newMessage.innerHTML.replace(message, `<span style="color: red; font-weight: bold;">${message}</span>`);
+        newMessage.innerHTML = newMessage.innerHTML.replace(message, '<span style="color: red; font-weight: bold;">${message}</span>');
         messagesContainer.parentNode.appendChild(newMessage); // Append the formatted message
     }
   }
