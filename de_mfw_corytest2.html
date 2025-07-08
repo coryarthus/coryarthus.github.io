@@ -32,7 +32,7 @@ window.addEventListener("message", function(event) {
         if (typeof payload === "string") {
             console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
 
-            if (payload.includes("[[..triggerCustomEvent..]]")) {
+            if (payload.includes("[[PFZ_ENABLE_INPUT]]")) {
                 const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
                     detail: {
                         source: "einstein-bot",
@@ -41,6 +41,19 @@ window.addEventListener("message", function(event) {
                 });
                 window.dispatchEvent(customEvent);
                 console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry");
+                postIframeEnable();
+            } else if (payload.includes("[[PFZ_DISABLE_INPUT]]")) {
+                const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
+                    detail: {
+                        source: "einstein-bot",
+                        timestamp: new Date()
+                    }
+                });
+                window.dispatchEvent(customEvent);
+                console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry");
+                postIframeDisable();
             } else {
                 console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
             }
@@ -52,6 +65,27 @@ window.addEventListener("message", function(event) {
     }
 });
 
+  // Function to enable user input
+  function postIframeEnable() {
+    const iframe = document.getElementById("embeddedMessagingFrame");
+    if (iframe?.contentWindow) {
+      console.log("📤 Sending 'InputEnable' to iframe");
+      iframe.contentWindow.postMessage("InputEnable", "*");
+    } else {
+      console.warn("⚠️ Iframe not found or not ready");
+    }
+  }
+
+  // Function to disable user input
+  function postIframeDisable() {
+    const iframe = document.getElementById("embeddedMessagingFrame");
+    if (iframe?.contentWindow) {
+      console.log("📤 Sending 'InputDisable' to iframe");
+      iframe.contentWindow.postMessage("InputDisable", "*");
+    } else {
+      console.warn("⚠️ Iframe not found or not ready");
+    }
+  }
 
 </script>
 
