@@ -24,24 +24,13 @@ style.textContent = `
 document.head.appendChild(style);
 
 window.addEventListener("message", function(event) {
-    console.log("🛰️ [EinsteinBot Listener] Message event received:", event);
-    console.log("........event.data = " + event.data);
-    console.log("........event.data.type = " + event.data.type);
-    console.log("........event.data.message = " + event.data.message);
+    console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
+    console.log("🛰️ [EinsteinBot Listener] event.data:", event.data);
+    console.log("🛰️ [EinsteinBot Listener] typeof event.data:", typeof event.data);
 
-    if (
-        event.data &&
-        event.data.type === "message" &&
-        event.data.message.includes("[[..triggerCustomEvent..]]")
-    ) {
-        const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
-            detail: {
-                source: "einstein-bot",
-                timestamp: new Date()
-            }
-        });
-        window.dispatchEvent(customEvent);
-        console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+    // If it's an object, log its keys
+    if (typeof event.data === "object") {
+        console.log("🛰️ [EinsteinBot Listener] event.data keys:", Object.keys(event.data));
     }
 });
 
