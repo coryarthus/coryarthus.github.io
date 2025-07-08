@@ -21,8 +21,8 @@ window.addEventListener("message", function(event) {
 
     if (
         event.data &&
-        event.data.type === "EmbeddedMessagingBotMessage" &&
-        event.data.message === "[[..triggerCustomEvent..]]"
+        event.data.type === "message" &&
+        event.data.message.includes("[[..triggerCustomEvent..]]")
     ) {
         const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
             detail: {
