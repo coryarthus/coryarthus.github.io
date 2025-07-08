@@ -9,11 +9,18 @@
 <script type="text/javascript">
 
 const style = document.createElement('style');
+//style.textContent = `
+//    .embeddedMessagingMessage:has(.slds-rich-text:contains("[[..triggerCustomEvent..]]")) {
+//        display: none !important;
+//    }
+//`;
+
 style.textContent = `
-    .embeddedMessagingMessage:has(.slds-rich-text:contains("[[..triggerCustomEvent..]]")) {
+    p:has(.slds-rich-text:contains("[[..triggerCustomEvent..]]")) {
         display: none !important;
     }
 `;
+
 document.head.appendChild(style);
 
 window.addEventListener("message", function(event) {
