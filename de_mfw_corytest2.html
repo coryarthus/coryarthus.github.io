@@ -40,10 +40,10 @@ document.head.appendChild(style);
 
         if (abstractMessage?.choices) {
           console.log("🚫 Disabling input (choices detected)");
-          postIframeDisable();
+          //postIframeDisable();
         } else if (abstractMessage?.choicesResponse) {
           console.log("✅ Enabling input (choicesResponse detected)");
-          postIframeEnable();
+          //postIframeEnable();
         } else {
           console.log("ℹ️ No actionable message type found in payload");
         }
