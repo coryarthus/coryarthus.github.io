@@ -94,7 +94,7 @@ const observer = new MutationObserver((mutationsList) => {
           const text = node.textContent || "";
           console.log("Checking message content:", text);
 
-          if (text.includes("trigger-custom-event")) {
+          if (text.includes("[[PFZ_DISABLE_INPUT]]") || text.includes("[[PFZ_ENABLE_INPUT]]")) {
             console.log("Hiding message:", node);
             node.style.display = "none";
           }
@@ -105,7 +105,7 @@ const observer = new MutationObserver((mutationsList) => {
 });
 
 // Replace this with the actual selector for your chat container
-const chatContainer = document.querySelector("your-chat-container-selector");
+const chatContainer = document.querySelector("embeddedmessaging-container");
 
 if (chatContainer) {
   console.log("Chat container found:", chatContainer);
