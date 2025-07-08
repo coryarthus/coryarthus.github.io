@@ -24,8 +24,34 @@ style.textContent = `
 document.head.appendChild(style);
 
 window.addEventListener("message", function(event) {
-    console.log("🛰️ [EinsteinBot Listener] Full payload:", event.data.data.eventDetails.conversationEntry.entryPayload);
+    console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
+
+    try {
+        const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
+
+        if (typeof payload === "string") {
+            console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
+
+            if (payload.includes("[[..triggerCustomEvent..]]")) {
+                const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
+                    detail: {
+                        source: "einstein-bot",
+                        timestamp: new Date()
+                    }
+                });
+                window.dispatchEvent(customEvent);
+                console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+            } else {
+                console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
+            }
+        } else {
+            console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
+        }
+    } catch (err) {
+        console.error("❌ [EinsteinBot Listener] Error processing message event:", err);
+    }
 });
+
 
 </script>
 
