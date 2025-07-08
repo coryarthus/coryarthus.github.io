@@ -82,6 +82,29 @@ window.addEventListener("message", function(event) {
     }
   });
 
+const observer = new MutationObserver((mutationsList) => {
+  for (const mutation of mutationsList) {
+    for (const node of mutation.addedNodes) {
+      if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.matches("embeddedmessaging-conversation-entry-item")
+      ) {
+        const text = node.textContent || "";
+        if (text.includes("[[PFZ_ENABLE_INPUT]]") || text.includes("[[PFZ_DISABLE_INPUT]]")) {
+          node.style.display = "none";
+        }
+      }
+    }
+  }
+});
+
+const chatContainer = document.querySelector("embeddedmessaging-container"); // Replace with actual container selector
+
+if (chatContainer) {
+  observer.observe(chatContainer, { childList: true, subtree: true });
+}
+
+
 </script>
 
 
