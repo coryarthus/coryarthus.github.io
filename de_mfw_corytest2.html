@@ -83,26 +83,37 @@ window.addEventListener("message", function(event) {
   });
 
 const observer = new MutationObserver((mutationsList) => {
+  console.log("MutationObserver triggered");
+
   for (const mutation of mutationsList) {
     for (const node of mutation.addedNodes) {
-      if (
-        node.nodeType === Node.ELEMENT_NODE &&
-        node.matches("embeddedmessaging-conversation-entry-item")
-      ) {
-        const text = node.textContent || "";
-        if (text.includes("[[PFZ_ENABLE_INPUT]]") || text.includes("[[PFZ_DISABLE_INPUT]]")) {
-          node.style.display = "none";
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        console.log("New node added:", node);
+
+        if (node.matches("embeddedmessaging-conversation-entry-item")) {
+          const text = node.textContent || "";
+          console.log("Checking message content:", text);
+
+          if (text.includes("trigger-custom-event")) {
+            console.log("Hiding message:", node);
+            node.style.display = "none";
+          }
         }
       }
     }
   }
 });
 
-const chatContainer = document.querySelector("embeddedmessaging-container"); // Replace with actual container selector
+// Replace this with the actual selector for your chat container
+const chatContainer = document.querySelector("your-chat-container-selector");
 
 if (chatContainer) {
+  console.log("Chat container found:", chatContainer);
   observer.observe(chatContainer, { childList: true, subtree: true });
+} else {
+  console.warn("Chat container not found. Please check the selector.");
 }
+
 
 
 </script>
