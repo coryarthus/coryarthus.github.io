@@ -7,8 +7,7 @@
   <title>Test: Disable Textbox When Choices are Presented</title>
 
 <script type="text/javascript">
-
-window.addEventListener("message", function(event) {
+  window.addEventListener("message", function(event) {
     console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
 
     try {
@@ -17,6 +16,7 @@ window.addEventListener("message", function(event) {
         if (typeof payload === "string") {
             console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
 
+            // Check for specific words in the message
             if (payload.includes("[[PFZ_ENABLE_INPUT]]")) {
                 const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
                     detail: {
@@ -28,6 +28,7 @@ window.addEventListener("message", function(event) {
                 console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry");
                 postIframeEnable();
+                formatImportantMessage(payload);  // Call function to format the message
             } else if (payload.includes("[[PFZ_DISABLE_INPUT]]")) {
                 const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
                     detail: {
@@ -39,6 +40,7 @@ window.addEventListener("message", function(event) {
                 console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry");
                 postIframeDisable();
+                formatImportantMessage(payload);  // Call function to format the message
             } else {
                 console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
             }
@@ -48,7 +50,19 @@ window.addEventListener("message", function(event) {
     } catch (err) {
         console.error("❌ [EinsteinBot Listener] Error processing message event:", err);
     }
-});
+  });
+
+  // Function to format specific messages
+  function formatImportantMessage(message) {
+    const messagesContainer = document.querySelector("embeddedMessaging-conversation-entry-item:last-child");
+    console.log("formatting element");
+    
+    if (messagesContainer) {
+        const newMessage = messagesContainer.cloneNode(true);
+        newMessage.innerHTML = newMessage.innerHTML.replace(message, `<span style="color: red; font-weight: bold;">${message}</span>`);
+        messagesContainer.parentNode.appendChild(newMessage); // Append the formatted message
+    }
+  }
 
   // Function to enable user input
   function postIframeEnable() {
@@ -71,19 +85,7 @@ window.addEventListener("message", function(event) {
       console.warn("⚠️ Iframe not found or not ready");
     }
   }
-
-  window.addEventListener("message", function (event) {
-    if (event.data === "iframe-ready") {
-      if (typeof postIframeDisable === "function") {
-        postIframeDisable();
-      } else {
-        console.warn("Function postIframeDisable is not defined.");
-      }
-    }
-  });
-
 </script>
-
 
 </head>
 
