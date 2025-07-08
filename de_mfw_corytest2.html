@@ -24,9 +24,7 @@ style.textContent = `
 document.head.appendChild(style);
 
 window.addEventListener("message", function(event) {
-    console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
-    console.log("🛰️ [EinsteinBot Listener] event.data:", event.data);
-    console.log("🛰️ [EinsteinBot Listener] typeof event.data:", typeof event.data);
+    console.log("🛰️ [EinsteinBot Listener] Full payload:", event.data.data.eventDetails.conversationEntry.entryPayload);
 
     // If it's an object, log its keys
     if (typeof event.data === "object") {
