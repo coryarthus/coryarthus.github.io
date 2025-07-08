@@ -6,17 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Test: Disable Textbox When Choices are Presented</title>
 
-<script>
+<script type="text/javascript">
 
 const style = document.createElement('style');
 style.textContent = `
-    .embeddedMessagingMessage:has(.slds-rich-text:contains("__triggerCustomEvent__")) {
+    .embeddedMessagingMessage:has(.slds-rich-text:contains("~~triggerCustomEvent~~")) {
         display: none !important;
     }
 `;
 document.head.appendChild(style);
 
   // Listen for messages from the iframe
+  <!--
   window.addEventListener("message", (event) => {
     console.log("📨 Received message event:", event);
 
@@ -54,6 +55,7 @@ document.head.appendChild(style);
       console.error("💥 Unexpected error in message handler:", err);
     }
   });
+  --//>
 
   // Function to enable user input
   function postIframeEnable() {
