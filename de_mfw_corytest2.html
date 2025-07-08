@@ -91,7 +91,7 @@ window.addEventListener("message", function(event) {
             node.tagName === "EMBEDDEDMESSAGING-CONVERSATION-ENTRY-ITEM"
           ) {
             const text = node.textContent || "";
-            if (text.includes("trigger-custom-event")) {
+            if (text.includes("[[PFZ_ENABLE_INPUT]]") || text.includes("[[PFZ_DISABLE_INPUT]]")) {
               node.style.display = "none";
             }
           }
