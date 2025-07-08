@@ -9,13 +9,13 @@
 <script type="text/javascript">
 
 window.addEventListener("message", function(event) {
-    console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
+    //console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
 
         if (typeof payload === "string") {
-            console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
+            //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
 
             if (payload.includes("[[PFZ_ENABLE_INPUT]]")) {
                 const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
@@ -25,7 +25,7 @@ window.addEventListener("message", function(event) {
                     }
                 });
                 window.dispatchEvent(customEvent);
-                console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+                //console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry");
                 postIframeEnable();
             } else if (payload.includes("[[PFZ_DISABLE_INPUT]]")) {
@@ -36,14 +36,14 @@ window.addEventListener("message", function(event) {
                     }
                 });
                 window.dispatchEvent(customEvent);
-                console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+                //console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry");
                 postIframeDisable();
             } else {
-                console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
+                //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
             }
         } else {
-            console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
+            //console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
         }
     } catch (err) {
         console.error("❌ [EinsteinBot Listener] Error processing message event:", err);
