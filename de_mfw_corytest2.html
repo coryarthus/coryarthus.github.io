@@ -25,6 +25,9 @@ document.head.appendChild(style);
 
 window.addEventListener("message", function(event) {
     console.log("🛰️ [EinsteinBot Listener] Message event received:", event);
+    console.log("........event.data = " + event.data);
+    console.log("........event.data.type = " + event.data.type);
+    console.log("........event.data.message = " + event.data.message);
 
     if (
         event.data &&
