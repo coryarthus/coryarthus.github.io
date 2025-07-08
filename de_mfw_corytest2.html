@@ -28,6 +28,7 @@ window.addEventListener("message", function(event) {
                 console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry");
                 postIframeEnable();
+                formatImportantMessage(payload);
             } else if (payload.includes("[[PFZ_DISABLE_INPUT]]")) {
                 const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
                     detail: {
@@ -39,6 +40,7 @@ window.addEventListener("message", function(event) {
                 console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry");
                 postIframeDisable();
+                formatImportantMessage(payload);
             } else {
                 console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
             }
