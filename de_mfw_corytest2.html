@@ -87,6 +87,17 @@ window.addEventListener("message", function(event) {
     }
   }
 
+  window.addEventListener("message", function (event) {
+    if (event.data === "iframe-ready") {
+      if (typeof postIframeDisable === "function") {
+        postIframeDisable();
+      } else {
+        console.warn("Function postIframeDisable is not defined.");
+      }
+    }
+  });
+
+
 </script>
 
 
