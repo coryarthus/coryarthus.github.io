@@ -55,7 +55,7 @@ window.addEventListener("message", function(event) {
   // Function to format specific messages
   function formatImportantMessage(message) {
     const messagesContainer = document.querySelector("embeddedMessaging-conversation-entry-item:last-child");
-
+    console.log("Inside formatImportantMessage. messagesContainer: ", messagesContainer);
     if (messagesContainer) {
         const newMessage = messagesContainer.cloneNode(true);
         newMessage.innerHTML = newMessage.innerHTML.replace(message, `<span style="color: red; font-weight: bold;">${message}</span>`);
