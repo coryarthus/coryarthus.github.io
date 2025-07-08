@@ -52,6 +52,17 @@ window.addEventListener("message", function(event) {
     }
 });
 
+  // Function to format specific messages
+  function formatImportantMessage(message) {
+    const messagesContainer = document.querySelector("embeddedMessaging-conversation-entry-item:last-child");
+
+    if (messagesContainer) {
+        const newMessage = messagesContainer.cloneNode(true);
+        newMessage.innerHTML = newMessage.innerHTML.replace(message, `<span style="color: red; font-weight: bold;">${message}</span>`);
+        messagesContainer.parentNode.appendChild(newMessage); // Append the formatted message
+    }
+  }
+
   // Function to enable user input
   function postIframeEnable() {
     const iframe = document.getElementById("embeddedMessagingFrame");
