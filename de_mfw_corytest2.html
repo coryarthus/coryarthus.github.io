@@ -52,29 +52,6 @@ window.addEventListener("message", function(event) {
     }
 });
 
-// Function to format specific messages
-function formatImportantMessage(message) {
-    const iframe = document.getElementById("embeddedMessagingFrame");
-    if (iframe?.contentWindow) {
-        const iframeDoc = iframe.contentWindow.document;
-
-        // Check if the iframe contains a shadow root
-        const shadowRoot = iframeDoc.querySelector("embeddedMessagingFrame")?.shadowRoot;
-
-        if (shadowRoot) {
-            const messagesContainer = shadowRoot.querySelector("embeddedMessaging-conversation-entry-item:last-child");
-            if (messagesContainer) {
-                const newMessage = messagesContainer.cloneNode(true);
-                newMessage.innerHTML = newMessage.innerHTML.replace(message, '<span style="color: red; font-weight: bold;">${message}</span>');
-                messagesContainer.parentNode.appendChild(newMessage); // Append the formatted message
-            }
-        } else {
-            console.warn("⚠️ Shadow DOM not found in iframe.");
-        }
-    } else {
-        console.warn("⚠️ Iframe not found or not ready.");
-    }
-}
   // Function to enable user input
   function postIframeEnable() {
     const iframe = document.getElementById("embeddedMessagingFrame");
