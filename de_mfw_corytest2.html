@@ -16,6 +16,25 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+window.addEventListener("message", function(event) {
+    console.log("🛰️ [EinsteinBot Listener] Message event received:", event);
+
+    if (
+        event.data &&
+        event.data.type === "EmbeddedMessagingBotMessage" &&
+        event.data.message === "~~triggerCustomEvent~~"
+    ) {
+        const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
+            detail: {
+                source: "einstein-bot",
+                timestamp: new Date()
+            }
+        });
+        window.dispatchEvent(customEvent);
+        console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+    }
+});
+
 </script>
 
 
