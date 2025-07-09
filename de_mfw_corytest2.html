@@ -23,7 +23,7 @@ window.addEventListener("message", function(event) {
             } else if (payload.includes("...Disabling text entry...")) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry");
                 postIframeDisable();
-            } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Agent"'))
+            } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Agent"')) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined");
                 postIframeEnable();
             } else {
