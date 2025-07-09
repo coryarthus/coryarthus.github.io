@@ -66,6 +66,13 @@ window.addEventListener("message", function(event) {
     }
   });
 
+window.addEventListener("onEmbeddedMessagingConversationRouted", (event) => {
+  console.log("Received the onEmbeddedMessagingConversationRouted event…");
+  console.log("Event detail: ", event.detail);
+
+  // Do something...
+});
+
 </script>
 
 
