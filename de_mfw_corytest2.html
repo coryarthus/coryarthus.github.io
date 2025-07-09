@@ -52,7 +52,7 @@ window.addEventListener("message", function(event) {
   function postIframeEnable() {
     const iframe = document.getElementById("embeddedMessagingFrame");
     if (iframe?.contentWindow) {
-      console.log("📤 Sending 'InputEnable' to iframe");
+      // console.log("📤 Sending 'InputEnable' to iframe");
       iframe.contentWindow.postMessage("InputEnable", "*");
     } else {
       console.warn("⚠️ Iframe not found or not ready");
@@ -63,7 +63,7 @@ window.addEventListener("message", function(event) {
   function postIframeDisable() {
     const iframe = document.getElementById("embeddedMessagingFrame");
     if (iframe?.contentWindow) {
-      console.log("📤 Sending 'InputDisable' to iframe");
+      // console.log("📤 Sending 'InputDisable' to iframe");
       iframe.contentWindow.postMessage("InputDisable", "*");
     } else {
       console.warn("⚠️ Iframe not found or not ready");
@@ -80,13 +80,6 @@ window.addEventListener("message", function(event) {
       }
     }
   });
-
-window.addEventListener("onEmbeddedMessagingConversationRouted", (event) => {
-  console.log("Received the onEmbeddedMessagingConversationRouted event…");
-  console.log("Event detail: ", event.detail);
-
-  // Do something...
-});
 
 </script>
 
