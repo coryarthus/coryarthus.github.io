@@ -15,7 +15,7 @@ window.addEventListener("message", function(event) {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
 
         if (typeof payload === "string") {
-            console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
+            //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
 
             if (payload.includes("...Enabling text entry...")) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so");
