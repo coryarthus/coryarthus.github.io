@@ -30,7 +30,7 @@ window.addEventListener("message", function(event) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left");
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
-                postIframeEnable();
+                postIframeDisable();
             } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Chatbot"')) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined");
                 postIframeDisable();
