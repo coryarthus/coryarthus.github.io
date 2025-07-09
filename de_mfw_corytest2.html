@@ -33,6 +33,9 @@ window.addEventListener("message", function(event) {
             } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Chatbot"')) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined");
                 postIframeDisable();
+            } else if (payload.includes('"entryType":"CloseConversation"')) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the conversation ended");
+                postIframeDisable();
             } else {
                 //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
             }
