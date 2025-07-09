@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Test: Disable Textbox When Choices are Presented</title>
+  <title>Test: Keep Textbot Disabled Except When Collecting Free-text Information</title>
 
 <script type="text/javascript">
 
@@ -17,26 +17,10 @@ window.addEventListener("message", function(event) {
         if (typeof payload === "string") {
             //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
 
-            if (payload.includes("[[PFZ_ENABLE_INPUT]]")) {
-                const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
-                    detail: {
-                        source: "einstein-bot",
-                        timestamp: new Date()
-                    }
-                });
-                window.dispatchEvent(customEvent);
-                //console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+            if (payload.includes("...Enabling text entry...")) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry");
                 postIframeEnable();
-            } else if (payload.includes("[[PFZ_DISABLE_INPUT]]")) {
-                const customEvent = new CustomEvent("EinsteinBotCustomEvent", {
-                    detail: {
-                        source: "einstein-bot",
-                        timestamp: new Date()
-                    }
-                });
-                window.dispatchEvent(customEvent);
-                //console.log("🚀 [EinsteinBot Listener] Custom event dispatched:", customEvent);
+            } else if (payload.includes("...Disabling text entry...")) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry");
                 postIframeDisable();
             } else {
@@ -88,7 +72,7 @@ window.addEventListener("message", function(event) {
 </head>
 
 <body>
-  <h1>Test: Disable Textbox When Choices are Presented</h1>
+  <h1>Test: Keep Textbot Disabled Except When Collecting Free-text Information</h1>
 </body>
 
 <script type='text/javascript'>
