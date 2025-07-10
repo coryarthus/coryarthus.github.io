@@ -13,6 +13,7 @@ window.addEventListener("message", function(event) {
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
+        const role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
 
         if (typeof payload === "string") {
             //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
@@ -37,12 +38,12 @@ window.addEventListener("message", function(event) {
             } else if (payload.includes('"entryType":"CloseConversation"')) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the conversation ended");
                 postIframeDisable();
-            } else if (payload.includes('"role":"Agent"')) {
+            } else if (role.equals('Agent')) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent is conversing with the customer");
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
                 postIframeDisable();
-            } else if (payload.includes('"role":"EndUser"')) {
+            } else if (role.equals('EndUser')) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the customer is conversing with the agent");
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
