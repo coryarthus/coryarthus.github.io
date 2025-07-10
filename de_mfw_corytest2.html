@@ -17,12 +17,12 @@ window.addEventListener("message", function(event) {
         if (typeof payload === "string") {
             //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
 
-            if (payload.includes("...Enabling text entry...")) {
+            if (payload.includes("❓")) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so");
                 postIframeEnable();
-            } else if (payload.includes("...Disabling text entry...")) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so");
-                postIframeDisable();
+            //} else if (payload.includes("...Disabling text entry...")) {
+                //console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so");
+                //postIframeDisable();
             } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Agent"')) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined");
                 postIframeEnable();
@@ -39,6 +39,8 @@ window.addEventListener("message", function(event) {
                 postIframeDisable();
             } else {
                 //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because no other criteria were met");
+                postIframeDisable();
             }
         } else {
             //console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
