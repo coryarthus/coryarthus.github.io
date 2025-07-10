@@ -15,7 +15,7 @@ window.addEventListener("message", function(event) {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
 
         if (typeof payload === "string") {
-            //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
+            console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
 
             if (payload.includes("❓")) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so");
@@ -36,6 +36,16 @@ window.addEventListener("message", function(event) {
                 postIframeDisable();
             } else if (payload.includes('"entryType":"CloseConversation"')) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the conversation ended");
+                postIframeDisable();
+            } else if (payload.includes('"role":"Agent"')) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent is conversing with the customer");
+                // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
+                // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
+                postIframeDisable();
+            } else if (payload.includes('"role":"EndUser"')) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because the customer is conversing with the agent");
+                // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
+                // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
                 postIframeDisable();
             } else {
                 //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
