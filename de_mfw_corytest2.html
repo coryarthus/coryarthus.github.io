@@ -9,11 +9,11 @@
 <script type="text/javascript">
 
 window.addEventListener("message", function(event) {
-    console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
+    //console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
-        const role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
+        //const role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
 
         if (typeof payload === "string") {
             //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
@@ -21,9 +21,9 @@ window.addEventListener("message", function(event) {
             if (payload.includes("❓")) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so");
                 postIframeEnable();
-            //} else if (payload.includes("...Disabling text entry...")) {
-                //console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so");
-                //postIframeDisable();
+            } else if (payload.includes("🙏")) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so");
+                postIframeDisable();
             } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Agent"')) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined");
                 postIframeEnable();
@@ -38,16 +38,8 @@ window.addEventListener("message", function(event) {
             } else if (payload.includes('"entryType":"CloseConversation"')) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the conversation ended");
                 postIframeDisable();
-            } else if (role === 'Agent') {
-                console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent is conversing with the customer");
-                postIframeDisable();
-            } else if (role === 'EndUser') {
-                console.log("🚀 [EinsteinBot Listener] Enabling text entry because the customer is conversing with the agent");
-                postIframeDisable();
             } else {
                 //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because no other criteria were met");
-                postIframeDisable();
             }
         } else {
             //console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
