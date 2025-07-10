@@ -38,10 +38,10 @@ window.addEventListener("message", function(event) {
             } else if (payload.includes('"entryType":"CloseConversation"')) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the conversation ended");
                 postIframeDisable();
-            } else if (role.equals('Agent')) {
+            } else if (role === 'Agent') {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent is conversing with the customer");
                 postIframeDisable();
-            } else if (role.equals('EndUser')) {
+            } else if (role === 'EndUser') {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the customer is conversing with the agent");
                 postIframeDisable();
             } else {
