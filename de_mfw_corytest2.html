@@ -9,34 +9,41 @@
 <script type="text/javascript">
 
 window.addEventListener("message", function(event) {
+
+    const botFlagEnable = '❓';
+    const botFlagDisable = '🙏';
+    const eventMarkerParticipantChanged = '"entryType":"ParticipantChanged"';
+    const eventMarkerOperationAdd = '"operation":"add"';
+    const eventMarkerOperationRemove = '"operation":"remove"';
+    const eventMarkerRoleAgent = '"role":"Agent"';
+    const eventMarkerRoleChatbot = '"role":"Chatbot"';
+    const eventMarkerCloseConversation = '"entryType":"CloseConversation"';
+
     //console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
-        //const role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
 
         if (typeof payload === "string") {
-            //console.log("📦 [EinsteinBot Listener] entryPayload:", payload);
-
-            if (payload.includes("❓")) {
-                console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so");
+            if (payload.includes(botFlagEnable)) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
                 postIframeEnable();
-            } else if (payload.includes("🙏")) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so");
+            } else if (payload.includes(botFlagDisable)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so.");
                 postIframeDisable();
-            } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Agent"')) {
-                console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined");
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleAgent)) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
                 postIframeEnable();
-            } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"remove"') && payload.includes('"role":"Agent"')) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left");
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationRemove) && payload.includes(eventMarkerRoleAgent)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
                 postIframeDisable();
-            } else if (payload.includes('"entryType":"ParticipantChanged"') && payload.includes('"operation":"add"') && payload.includes('"role":"Chatbot"')) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined");
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleChatbot)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined.");
                 postIframeDisable();
-            } else if (payload.includes('"entryType":"CloseConversation"')) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the conversation ended");
+            } else if (payload.includes(eventMarkerCloseConversation)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
                 postIframeDisable();
             } else {
                 //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
@@ -53,7 +60,6 @@ window.addEventListener("message", function(event) {
   function postIframeEnable() {
     const iframe = document.getElementById("embeddedMessagingFrame");
     if (iframe?.contentWindow) {
-      // console.log("📤 Sending 'InputEnable' to iframe");
       iframe.contentWindow.postMessage("InputEnable", "*");
     } else {
       console.warn("⚠️ Iframe not found or not ready");
@@ -64,7 +70,6 @@ window.addEventListener("message", function(event) {
   function postIframeDisable() {
     const iframe = document.getElementById("embeddedMessagingFrame");
     if (iframe?.contentWindow) {
-      // console.log("📤 Sending 'InputDisable' to iframe");
       iframe.contentWindow.postMessage("InputDisable", "*");
     } else {
       console.warn("⚠️ Iframe not found or not ready");
