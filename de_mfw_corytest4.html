@@ -11,6 +11,7 @@
 // Listener for receiving messages from the Salesforce Bot (via postMessage)
 window.addEventListener('message', function(event) {
     console.log('Received message:', event);  // Log the full event object for troubleshooting
+    console.log('Event origin:', event.origin);
 
     // Validate the event's origin for security (ensure it's from a trusted source)
     if (event.origin !== 'https://your-trusted-origin.com') {
