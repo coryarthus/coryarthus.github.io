@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging for Web - Custom Event</title>
+    <!-- Embedding the Messaging SDK -->
+    <script src="https://web.chat.salesforce.com/js/messaging.js"></script>
+</head>
+<body>
+    <h1>Welcome to our Chatbot</h1>
+    <!-- Embed the chat widget -->
+    <messaging-web
+        org-id="your-org-id"
+        deployment-id="your-deployment-id"
+        button-id="your-button-id"
+        base-url="https://your-instance.salesforce.com"
+    ></messaging-web>
+
+    <script>
+        // Listen for custom events sent from LWC or other sources
+        window.Sfdc.Messaging.on('custom_event', function(eventData) {
+            console.log('Custom event received:', eventData);
+            
+            // Perform actions based on the event data
+            if (eventData.data.customMessage === 'Hello from LWC!') {
+                alert('Custom message received from LWC!');
+                // You can add more logic here to interact with the UI or take actions
+            }
+        });
+    </script>
+</body>
+</html>

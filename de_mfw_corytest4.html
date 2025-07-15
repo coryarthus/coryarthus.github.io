@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test: Keep Textbot Disabled Except When Collecting Free-text Information</title>
+
+<script type="text/javascript">
+
+window.addEventListener("message", function(event) {
+
+    const botFlagEnable = '❓';
+    const botFlagDisable = '🙏';
+    const eventMarkerParticipantChanged = '"entryType":"ParticipantChanged"';
+    const eventMarkerOperationAdd = '"operation":"add"';
+    const eventMarkerOperationRemove = '"operation":"remove"';
+    const eventMarkerRoleAgent = '"role":"Agent"';
+    const eventMarkerRoleChatbot = '"role":"Chatbot"';
+    const eventMarkerCloseConversation = '"entryType":"CloseConversation"';
+
+    console.log("🛰️ [EinsteinBot Listener] Full event object:", event);
+
+    try {
+        const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
+
+        if (typeof payload === "string") {
+            if (payload.includes(botFlagEnable)) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
+                postIframeEnable();
+            } else if (payload.includes(botFlagDisable)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so.");
+                postIframeDisable();
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleAgent)) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
+                postIframeEnable();
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationRemove) && payload.includes(eventMarkerRoleAgent)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
+                // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
+                // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
+                postIframeDisable();
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleChatbot)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined.");
+                postIframeDisable();
+            } else if (payload.includes(eventMarkerCloseConversation)) {
+                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
+                postIframeDisable();
+            } else {
+                //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
+            }
+        } else {
+            //console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
+        }
+    } catch (err) {
+        console.error("❌ [EinsteinBot Listener] Error processing message event:", err);
+    }
+});
+
+  // Function to enable user input
+  function postIframeEnable() {
+    const iframe = document.getElementById("embeddedMessagingFrame");
+    if (iframe?.contentWindow) {
+      iframe.contentWindow.postMessage("InputEnable", "*");
+    } else {
+      console.warn("⚠️ Iframe not found or not ready");
+    }
+  }
+
+  // Function to disable user input
+  function postIframeDisable() {
+    const iframe = document.getElementById("embeddedMessagingFrame");
+    if (iframe?.contentWindow) {
+      iframe.contentWindow.postMessage("InputDisable", "*");
+    } else {
+      console.warn("⚠️ Iframe not found or not ready");
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (event.data === "iframe-ready") {
+      if (typeof postIframeDisable === "function") {
+        console.log("🚀 [EinsteinBot Listener] Disabling text entry to start");
+        postIframeDisable();
+      } else {
+        console.warn("Function postIframeDisable is not defined.");
+      }
+    }
+  });
+
+</script>
+
+
+</head>
+
+<body>
+  <h1>Test: Keep Textbot Disabled Except When Collecting Free-text Information</h1>
+  <ol>
+    <li>Disable text entry at conversation initiation</li>
+    <li>Enable text entry when the bot asks the customer a question requiring free text</li>
+    <li>Disable text entry when the bot's open-ended questions are completed</li>
+    <li>Enable text entry when an agent joins the conversation</li>
+    <li>Disable text entry when agent ends the conversation</li>
+    <li>Disable text entry when customer ends the conversation</li>
+  </ol>
+</body>
+
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00D9O00000E20tZ',
+				'DE_Messaging_for_Web',
+				'https://pfizermedinfo--corytest.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831',
+				{
+					scrt2URL: 'https://pfizermedinfo--corytest.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://pfizermedinfo--corytest.sandbox.my.site.com/ESWDEMessagingforWeb1731983263831/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+</html>
