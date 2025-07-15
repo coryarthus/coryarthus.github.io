@@ -11,10 +11,9 @@
 // Listener for receiving messages from the Salesforce Bot (via postMessage)
 window.addEventListener('message', function(event) {
     console.log('Received message:', event);  // Log the full event object for troubleshooting
-    console.log('Event origin:', event.origin);
 
     // Validate the event's origin for security (ensure it's from a trusted source)
-    if (event.origin !== 'https://your-trusted-origin.com') {
+    if (event.origin !== 'https://pfizermedinfo--corytest.sandbox.my.site.com') {
         console.warn('Untrusted message origin:', event.origin);
         return;
     }
@@ -27,11 +26,11 @@ window.addEventListener('message', function(event) {
 
         // Perform actions based on the actionType
         if (data.actionType === 'setReadOnly') {
-            document.querySelector('#botTextBox').setAttribute('readonly', true);  // Set the text box to read-only
-            console.log('Text box set to read-only');
+            //document.querySelector('#botTextBox').setAttribute('readonly', true);  // Set the text box to read-only
+            console.log('NEW Text box set to read-only');
         } else if (data.actionType === 'setEditable') {
-            document.querySelector('#botTextBox').removeAttribute('readonly');  // Make the text box editable again
-            console.log('Text box set to editable');
+            //document.querySelector('#botTextBox').removeAttribute('readonly');  // Make the text box editable again
+            console.log('NEW Text box set to editable');
         }
     }
 }, false);
