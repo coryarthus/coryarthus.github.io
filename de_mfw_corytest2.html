@@ -106,15 +106,23 @@ window.addEventListener("message", function(event) {
 </head>
 
 <body>
-  <h1>Test: Keep Textbot Disabled Except When Collecting Free-text Information</h1>
-  <ol>
-    <li>Disable text entry at conversation initiation</li>
-    <li>Enable text entry when the bot asks the customer a question requiring free text</li>
-    <li>Disable text entry when the bot's open-ended questions are completed</li>
-    <li>Enable text entry when an agent joins the conversation</li>
-    <li>Disable text entry when agent ends the conversation</li>
-    <li>Disable text entry when customer ends the conversation</li>
-  </ol>
+  <h1>Testing the enabling and disabling of the free-text box</h1>
+<ol>
+  <li><strong>Disabled when...</strong>
+    <ul>
+      <li>the customer initiates a chat session</li>
+      <li>the bot sends any message that does not include the trigger phrase ("➤")</li>
+      <li>an agent leaves the conversation</li>
+      <li>the customer ends the conversation</li>
+    </ul>
+  </li>
+  <li><strong>Enabled when...</strong>
+    <ul>
+      <li>a bot message includes the trigger phrase ("➤")</li>
+      <li>an agent joins the conversation</li>
+    </ul>
+  </li>
+</ol>
 </body>
 
 <script type='text/javascript'>
