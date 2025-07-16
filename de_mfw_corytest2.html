@@ -13,6 +13,7 @@ window.addEventListener("message", function(event) {
     const botFlagEnable = '➤';
     const botFlagDisable = '🙏';
     const eventMarkerParticipantChanged = '"entryType":"ParticipantChanged"';
+    const eventMarkerMessage = '"entryType":"Message"';
     const eventMarkerOperationAdd = '"operation":"add"';
     const eventMarkerOperationRemove = '"operation":"remove"';
     const eventMarkerRoleAgent = '"role":"Agent"';
@@ -45,6 +46,9 @@ window.addEventListener("message", function(event) {
             } else if (payload.includes(eventMarkerCloseConversation)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
                 postIframeDisable();
+            } else if (payload.includes(eventMarkerMessage) && payload.includes(eventMarkerRoleAgent)) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent sent a message.");
+                postIframeEnable();
             } else {
                 console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
                 console.log("🛰️ [EinsteinBot Listener No Trigger] Full event object:", event);
