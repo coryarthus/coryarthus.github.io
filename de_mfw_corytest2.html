@@ -46,7 +46,8 @@ window.addEventListener("message", function(event) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
                 postIframeDisable();
             } else {
-                //console.log("🔍 [EinsteinBot Listener] entryPayload received, but no trigger string found.");
+                console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
+                postIframeDisable();
             }
         } else {
             //console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
