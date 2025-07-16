@@ -35,7 +35,7 @@ window.addEventListener("message", function(event) {
                 postIframeDisable();
             } else if (role === "Chatbot" && payload.includes(botFlagEnable)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
-                postIframeDisable();
+                postIframeEnable();
             } else if (entryType === "ParticipantChanged" && payload.includes(eventMarkerOperationAdd) && role === "Agent") {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
                 postIframeEnable();
