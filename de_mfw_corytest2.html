@@ -43,7 +43,7 @@ window.addEventListener("message", function(event) {
                        payload.includes(eventMarkerRoleAgent)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
                 postIframeEnable();
-            } else if (payload.includes(eventMarkerParticipantChanged) && 
+            } else if (entryType === eventMarkerEntryTypeParticipantChanged && 
                        payload.includes(eventMarkerOperationRemove) && 
                        payload.includes(eventMarkerRoleAgent)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
