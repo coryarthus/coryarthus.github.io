@@ -24,7 +24,7 @@ window.addEventListener("message", function(event) {
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
-        cost role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
+        const role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
 
         if (typeof payload === "string") {
             if (role === "Chatbot" && !payload.includes(botFlagEnable)) {
