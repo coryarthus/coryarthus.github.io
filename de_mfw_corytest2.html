@@ -24,21 +24,21 @@ window.addEventListener("message", function(event) {
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
-        const role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
+        const eventSenderRole = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
         const entryType = event?.data?.data?.eventDetails?.conversationEntry?.entryType;
 
         if (typeof payload === "string") {
         
-            if (entryType === "ParticipantChanged" && payload.includes(eventMarkerOperationAdd) && role === "Chatbot") {
+            if (entryType === "ParticipantChanged" && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleChatbot)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined.");
                 postIframeDisable();
             } else if (role === "Chatbot" && payload.includes(botFlagEnable)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
                 postIframeEnable();
-            } else if (entryType === "ParticipantChanged" && payload.includes(eventMarkerOperationAdd) && role === "Agent") {
+            } else if (entryType === "ParticipantChanged" && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleAgent)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
                 postIframeEnable();
-            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationRemove) && role === "Agent") {
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationRemove) && payload.includes(eventMarkerRoleAgent)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
@@ -49,7 +49,7 @@ window.addEventListener("message", function(event) {
             } else {
                 //console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
                 console.log("🛰️ [EinsteinBot Listener] Entering final else clause. Doing nothing.", event);
-                console.log("Role: ", role);
+                console.log("Event Sender Role: ", eventSenderRole);
                 console.log("entryType: ", entryType);
                 console.log("payload: ", payload);
                 //postIframeDisable();
