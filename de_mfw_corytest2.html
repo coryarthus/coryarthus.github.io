@@ -24,21 +24,22 @@ window.addEventListener("message", function(event) {
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
+        cost role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
 
         if (typeof payload === "string") {
-            if (payload.includes(eventMarkerRoleChatbot) && !payload.includes(botFlagEnable)) {
+            if (role === "Chatbot" && !payload.includes(botFlagEnable)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot sent an event that did not include the enabling marker.");
                 postIframeDisable();
-            } else if (payload.includes(eventMarkerRoleChatbot) && payload.includes(botFlagEnable)) {
+            } else if (role === "Chatbot" && payload.includes(botFlagEnable)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
                 postIframeEnable();
             } /*else if (payload.includes(botFlagDisable)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot said so.");
                 postIframeDisable();
-            } */ else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleAgent)) {
+            } */ else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationAdd) && role === "Agent") {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
                 postIframeEnable();
-            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationRemove) && payload.includes(eventMarkerRoleAgent)) {
+            } else if (payload.includes(eventMarkerParticipantChanged) && payload.includes(eventMarkerOperationRemove) && role === "Agent") {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
