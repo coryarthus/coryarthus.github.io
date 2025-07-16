@@ -26,7 +26,6 @@ window.addEventListener("message", function(event) {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
         const role = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
         const entryType = event?.data?.data?.eventDetails?.conversationEntry?.entryType;
-        const operation = event?.data?.data?.eventDetails?.conversationEntry?.entryType;
 
         if (typeof payload === "string") {
         
@@ -52,7 +51,7 @@ window.addEventListener("message", function(event) {
                 console.log("🛰️ [EinsteinBot Listener] Entering final else clause. Doing nothing.", event);
                 console.log("Role: ", role);
                 console.log("entryType: ", entryType);
-                console.log("operation: ", operation);
+                console.log("payload: ", payload);
                 //postIframeDisable();
             }
         
