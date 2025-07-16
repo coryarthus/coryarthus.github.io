@@ -47,6 +47,7 @@ window.addEventListener("message", function(event) {
                 postIframeDisable();
             } else {
                 console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
+                console.log("🛰️ [EinsteinBot Listener No Trigger] Full event object:", event);
                 postIframeDisable();
             }
         } else {
