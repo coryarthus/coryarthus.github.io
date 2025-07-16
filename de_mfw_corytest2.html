@@ -32,7 +32,7 @@ window.addEventListener("message", function(event) {
             if (entryType === "ParticipantChanged" && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleChatbot)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined.");
                 postIframeDisable();
-            } else if (role === "Chatbot" && payload.includes(botFlagEnable)) {
+            } else if (eventSenderRole === "Chatbot" && payload.includes(botFlagEnable)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
                 postIframeEnable();
             } else if (entryType === "ParticipantChanged" && payload.includes(eventMarkerOperationAdd) && payload.includes(eventMarkerRoleAgent)) {
