@@ -43,23 +43,19 @@ window.addEventListener("message", function(event) {
                        payload.includes(eventMarkerRoleAgent)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
                 postIframeEnable();
-            } else if (entryType === eventMarkerEntryTypeParticipantChanged && 
-                       payload.includes(eventMarkerOperationRemove) && 
-                       payload.includes(eventMarkerRoleAgent)) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
+            //} else if (entryType === eventMarkerEntryTypeParticipantChanged && 
+              //         payload.includes(eventMarkerOperationRemove) && 
+              //         payload.includes(eventMarkerRoleAgent)) {
+              //  console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
-                postIframeDisable();
+              //  postIframeDisable();
             } else if (payload.includes(eventMarkerCloseConversation)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
                 postIframeDisable();
             } else {
                 //console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
                 //console.log("🛰️ [EinsteinBot Listener] Entering final else clause. Doing nothing.", event);
-                //console.log("Event Sender Role: ", eventSenderRole);
-                //console.log("entryType: ", entryType);
-                //console.log("payload: ", payload);
-                //postIframeDisable();
             }
         } else {
             //console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
