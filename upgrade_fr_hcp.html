@@ -38,6 +38,8 @@ window.addEventListener("message", function(event) {
                 agentCount--;
             }
 
+            console.log(">>>>>>>>>>>>>>>>>>>>>  Agent Count: ", agentCount);
+
             if (agentCount > 0) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because at least one agent is connected.");
                 postIframeEnable();
