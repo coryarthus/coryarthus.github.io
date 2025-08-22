@@ -27,8 +27,6 @@ window.addEventListener("message", function(event) {
 
         if (typeof payload === "string") {
         
-            console.log("Event: ", event);
-        
             if (entryType === eventMarkerEntryTypeParticipantChanged && 
                 payload.includes(eventMarkerOperationAdd) && 
                 payload.includes(eventMarkerRoleAgent)) {
