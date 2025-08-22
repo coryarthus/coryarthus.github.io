@@ -46,11 +46,11 @@ window.addEventListener("message", function(event) {
                 payload.includes(eventMarkerRoleChatbot)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined.");
                 postIframeDisable();
-            } else if (eventSenderRole === "Chatbot" && 
+            } */else if (eventSenderRole === "Chatbot" && 
                        payload.includes(botFlagEnable)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
                 postIframeEnable();
-            } else if (eventSenderRole === "Chatbot" && 
+            } /*else if (eventSenderRole === "Chatbot" && 
                        !payload.includes(botFlagEnable)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot triggered an event and the payload did not include the enabling marker.");
                 postIframeDisable();
