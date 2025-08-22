@@ -17,6 +17,7 @@ window.addEventListener("message", function(event) {
     const eventMarkerRoleAgent = '"role":"Agent"';
     const eventMarkerRoleChatbot = '"role":"Chatbot"';
     const eventMarkerCloseConversation = '"entryType":"CloseConversation"';
+    var agentCount = 0;
 
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
@@ -28,6 +29,19 @@ window.addEventListener("message", function(event) {
             console.log("Event: ", event);
         
             if (entryType === eventMarkerEntryTypeParticipantChanged && 
+                payload.includes(eventMarkerOperationAdd) && 
+                payload.includes(eventMarkerRoleAgent)) {
+                agentCount++;
+            } else if (entryType === eventMarkerEntryTypeParticipantChanged && 
+              payload.includes(eventMarkerOperationRemove) && 
+              payload.includes(eventMarkerRoleAgent)) {
+                agentCount--;
+            }
+
+            if (agentCount > 0) {
+                console.log("🚀 [EinsteinBot Listener] Enabling text entry because at least one agent is connected.");
+                postIframeEnable();
+            } /*else if (entryType === eventMarkerEntryTypeParticipantChanged && 
                 payload.includes(eventMarkerOperationAdd) && 
                 payload.includes(eventMarkerRoleChatbot)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined.");
@@ -44,19 +58,22 @@ window.addEventListener("message", function(event) {
                        payload.includes(eventMarkerOperationAdd) && 
                        payload.includes(eventMarkerRoleAgent)) {
                 console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
+                agentCount++;
                 postIframeEnable();
             } else if (entryType === eventMarkerEntryTypeParticipantChanged && 
                        payload.includes(eventMarkerOperationRemove) && 
                        payload.includes(eventMarkerRoleAgent)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
+                agentCount--;
                 // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
                 // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
                 postIframeDisable();
-            } else if (payload.includes(eventMarkerCloseConversation)) {
+            }*/ else if (payload.includes(eventMarkerCloseConversation)) {
                 console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
                 postIframeDisable();
             } else {
-                //console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
+                console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
+                postIframeDisable();
                 //console.log("🛰️ [EinsteinBot Listener] Entering final else clause. Doing nothing.", event);
             }
         } else {
