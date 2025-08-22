@@ -8,6 +8,8 @@
 
 <script type="text/javascript">
 
+var agentCount = 0;
+
 window.addEventListener("message", function(event) {
 
     const botFlagEnable = '➤';
@@ -17,8 +19,7 @@ window.addEventListener("message", function(event) {
     const eventMarkerRoleAgent = '"role":"Agent"';
     const eventMarkerRoleChatbot = '"role":"Chatbot"';
     const eventMarkerCloseConversation = '"entryType":"CloseConversation"';
-    var agentCount = 0;
-
+    
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
         const eventSenderRole = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
