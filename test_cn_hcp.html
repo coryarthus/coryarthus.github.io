@@ -4,9 +4,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Test CN HCP: Testing the disabling of the free-text box</title>
+  <title>Test CN HCP: Testing the enabling and disabling of the free-text box</title>
 
 <script type="text/javascript">
+
+var agentCount = 0;
 
 window.addEventListener("message", function(event) {
 
@@ -17,7 +19,7 @@ window.addEventListener("message", function(event) {
     const eventMarkerRoleAgent = '"role":"Agent"';
     const eventMarkerRoleChatbot = '"role":"Chatbot"';
     const eventMarkerCloseConversation = '"entryType":"CloseConversation"';
-
+    
     try {
         const payload = event?.data?.data?.eventDetails?.conversationEntry?.entryPayload;
         const eventSenderRole = event?.data?.data?.eventDetails?.conversationEntry?.sender?.role;
@@ -27,39 +29,27 @@ window.addEventListener("message", function(event) {
         
             if (entryType === eventMarkerEntryTypeParticipantChanged && 
                 payload.includes(eventMarkerOperationAdd) && 
-                payload.includes(eventMarkerRoleChatbot)) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because a Chatbot joined.");
-                postIframeDisable();
-            } else if (eventSenderRole === "Chatbot" && 
-                       payload.includes(botFlagEnable)) {
-                console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
+                payload.includes(eventMarkerRoleAgent)) {
+                agentCount++;
+            } else if (entryType === eventMarkerEntryTypeParticipantChanged && 
+              payload.includes(eventMarkerOperationRemove) && 
+              payload.includes(eventMarkerRoleAgent)) {
+                agentCount--;
+            }
+
+            if (agentCount > 0) {
+                //console.log("🚀 [EinsteinBot Listener] Enabling text entry because at least one agent is connected.");
                 postIframeEnable();
             } else if (eventSenderRole === "Chatbot" && 
-                       !payload.includes(botFlagEnable)) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the bot triggered an event and the payload did not include the enabling marker.");
-                postIframeDisable();
-            } else if (entryType === eventMarkerEntryTypeParticipantChanged && 
-                       payload.includes(eventMarkerOperationAdd) && 
-                       payload.includes(eventMarkerRoleAgent)) {
-                console.log("🚀 [EinsteinBot Listener] Enabling text entry because an agent joined.");
+              payload.includes(botFlagEnable)) {
+                //console.log("🚀 [EinsteinBot Listener] Enabling text entry because the bot said so.");
                 postIframeEnable();
-            } else if (entryType === eventMarkerEntryTypeParticipantChanged && 
-                       payload.includes(eventMarkerOperationRemove) && 
-                       payload.includes(eventMarkerRoleAgent)) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because an agent left.");
-                // be careful with this - if there are ever multiple agents, then this would prevent the customer from conversing with the remaining agents after 
-                // one agent leaves. Transfers to other agents may also be problematic. Might want to consider excluding this one.
-                postIframeDisable();
             } else if (payload.includes(eventMarkerCloseConversation)) {
-                console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
+                //console.log("🚀 [EinsteinBot Listener] Disabling text entry because the customer ended the conversation.");
                 postIframeDisable();
             } else {
                 //console.log("🔍 [EinsteinBot Listener] Disabling text entry because no enabling trigger string was found.");
-                //console.log("🛰️ [EinsteinBot Listener] Entering final else clause. Doing nothing.", event);
-                //console.log("Event Sender Role: ", eventSenderRole);
-                //console.log("entryType: ", entryType);
-                //console.log("payload: ", payload);
-                //postIframeDisable();
+                postIframeDisable();
             }
         } else {
             //console.log("⚠️ [EinsteinBot Listener] entryPayload is not a string or is undefined.");
@@ -92,7 +82,7 @@ window.addEventListener("message", function(event) {
   window.addEventListener("message", function (event) {
     if (event.data === "iframe-ready") {
       if (typeof postIframeDisable === "function") {
-        console.log("🚀 [EinsteinBot Listener] Disabling text entry to start");
+        //console.log("🚀 [EinsteinBot Listener] Disabling text entry to start");
         postIframeDisable();
       } else {
         console.warn("Function postIframeDisable is not defined.");
@@ -106,43 +96,37 @@ window.addEventListener("message", function(event) {
 </head>
 
 <body>
-  <h1>Test CN HCP: Testing the disabling of the free-text box</h1>
+  <h1>Test CN HCP: Testing the enabling and disabling of the free-text box</h1>
 <ol>
-  <li><strong>Disabled when...</strong>
-    <ul>
-      <li>the customer initiates a chat session</li>
-      <li>the bot sends any message that does not include the trigger phrase ("➤")</li>
-      <li>an agent leaves the conversation</li>
-      <li>the customer ends the conversation</li>
-    </ul>
-  </li>
-  <li><strong>Enabled when...</strong>
+  <li><strong>Enabled ONLY when...</strong>
     <ul>
       <li>a bot message includes the trigger phrase ("➤")</li>
-      <li>an agent joins the conversation</li>
+      <li>at least one agent is connected</li>
     </ul>
   </li>
 </ol>
 </body>
 
 <script type='text/javascript'>
-	function initEmbeddedMessaging() {
-		try {
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+    function initEmbeddedMessaging() {
+        try {
+            embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 
-			embeddedservice_bootstrap.init(
-				'00D9O00000Ic6W6',
-				'PFZCNHCPMessaging',
-				'https://pfizermedinfo--test.sandbox.my.site.com/ESWPFZCNHCPMessaging1740595729630',
-				{
-					scrt2URL: 'https://pfizermedinfo--test.sandbox.my.salesforce-scrt.com'
-				}
-			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
+            embeddedservice_bootstrap.init(
+                '00D9O00000Ic6W6',
+                'PFZCNHCPMessaging',
+                'https://pfizermedinfo--test.sandbox.my.site.com/ESWPFZCNHCPMessaging1740595729630',
+                {
+                    scrt2URL: 'https://pfizermedinfo--test.sandbox.my.salesforce-scrt.com'
+                }
+            );
+        } catch (err) {
+            console.error('Error loading Embedded Messaging: ', err);
+        }
+    };
 </script>
 <script type='text/javascript' src='https://pfizermedinfo--test.sandbox.my.site.com/ESWPFZCNHCPMessaging1740595729630/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+
 
 </html>
