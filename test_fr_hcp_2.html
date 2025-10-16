@@ -43,18 +43,9 @@ function postIframeMessage(message) {
 }
 
 /**
- * Type definitions for message event payloads
- * @typedef {Object} ConversationEntry
- * @property {string} [entryType]
- * @property {string} [entryPayload]
- * @property {{ role?: string }} [sender]
- *
- * @typedef {Object} EventDetails
- * @property {ConversationEntry} [conversationEntry]
- *
- * @typedef {Object} MessageData
- * @property {{ eventDetails?: EventDetails }} [data]
+ * Immediately disable input on page load to prevent the free-text field from appearing.
  */
+postIframeMessage("InputDisable");
 
 /**
  * Handler for postMessage events from the embedded messaging iframe.
@@ -62,6 +53,12 @@ function postIframeMessage(message) {
  */
 window.addEventListener("message", function(event) {
   try {
+    // Special case: iframe initialization
+    if (event.data === "iframe-ready") {
+      postIframeMessage("InputDisable");
+      return;
+    }
+
     const details = event?.data?.data?.eventDetails?.conversationEntry;
     const payload = details?.entryPayload;
     const entryType = details?.entryType;
@@ -86,11 +83,6 @@ window.addEventListener("message", function(event) {
     } else if (payload.includes(EVENT_CLOSE_CONVERSATION)) {
       postIframeMessage("InputDisable");
     } else {
-      postIframeMessage("InputDisable");
-    }
-
-    // Special case: iframe initialization
-    if (event.data === "iframe-ready") {
       postIframeMessage("InputDisable");
     }
   } catch (err) {
