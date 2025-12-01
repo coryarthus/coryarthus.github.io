@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test Fabi</title>
+
+</head>
+
+<body>
+  <h1>Fabi test site</h1>
+</body>
+
+<script type="text/javascript">
+/**
+ * Count of currently connected human agents.
+ * Incremented/decremented based on "ParticipantChanged" events.
+ */
+let agentCount = 0;
+
+/** Constant markers used for detecting conversation entry events */
+const BOT_FLAG_ENABLE = '➤';
+const EVENT_PARTICIPANT_CHANGED = 'ParticipantChanged';
+const EVENT_OP_ADD = '"operation":"add"';
+const EVENT_OP_REMOVE = '"operation":"remove"';
+const EVENT_ROLE_AGENT = '"role":"Agent"';
+const EVENT_CLOSE_CONVERSATION = '"entryType":"CloseConversation"';
+
+/**
+ * Get the contentWindow of the embedded messaging iframe.
+ * @returns {Window|null} contentWindow of iframe, or null if not ready
+ */
+function getIframe() {
+  return document.getElementById("embeddedMessagingFrame")?.contentWindow || null;
+}
+
+/**
+ * Post a message to the embedded messaging iframe.
+ * @param {"InputEnable" | "InputDisable"} message
+ */
+function postIframeMessage(message) {
+  const iframeWindow = getIframe();
+  if (iframeWindow) {
+    iframeWindow.postMessage(message, "*");
+  } else {
+    console.warn("⚠️ Iframe not found or not ready");
+  }
+}
+
+/**
+ * Immediately disable input on page load to prevent the free-text field from appearing.
+ */
+postIframeMessage("InputDisable");
+
+/**
+ * Handler for postMessage events from the embedded messaging iframe.
+ * @param {MessageEvent<MessageData|string>} event
+ */
+window.addEventListener("message", function(event) {
+  try {
+    // Special case: iframe initialization
+    if (event.data === "iframe-ready") {
+      postIframeMessage("InputDisable");
+      return;
+    }
+
+    const details = event?.data?.data?.eventDetails?.conversationEntry;
+    const payload = details?.entryPayload;
+    const entryType = details?.entryType;
+    const senderRole = details?.sender?.role;
+
+    if (typeof payload !== "string") return;
+
+    // Track agent participation changes
+    if (entryType === EVENT_PARTICIPANT_CHANGED) {
+      if (payload.includes(EVENT_OP_ADD) && payload.includes(EVENT_ROLE_AGENT)) {
+        agentCount++;
+      } else if (payload.includes(EVENT_OP_REMOVE) && payload.includes(EVENT_ROLE_AGENT)) {
+        agentCount--;
+      }
+    }
+
+    // Decide whether to enable/disable input
+    if (agentCount > 0) {
+      postIframeMessage("InputEnable");
+    } else if (senderRole === "Chatbot" && payload.includes(BOT_FLAG_ENABLE)) {
+      postIframeMessage("InputEnable");
+    } else if (payload.includes(EVENT_CLOSE_CONVERSATION)) {
+      postIframeMessage("InputDisable");
+    } else {
+      postIframeMessage("InputDisable");
+    }
+  } catch (err) {
+    console.error("❌ [EinsteinBot Listener] Error processing message event:", err);
+  }
+});
+</script>
+
+<script type='text/javascript'>
+  window.addEventListener("onEmbeddedMessagingReady", e => {
+    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+      input_Country: "BR",
+      input_ISOCountry: "BR",
+      input_ChannelDetails: "FABI - Website | Corporate"
+      
+    });
+}); function initEmbeddedMessaging() {
+        try {
+            embeddedservice_bootstrap.settings.language = 'pt_BR'; // For example, enter 'en' or 'en-US'
+            embeddedservice_bootstrap.init(
+                '00D9O00000Ic6W6',
+                'PFZ_BR_Messaging',
+                'https://pfizermedinfo--test.sandbox.my.site.com/ESWMessagingforWebBrazil',
+                {
+                    scrt2URL: 'https://pfizermedinfo--test.sandbox.my.salesforce-scrt.com'
+                }
+            );
+        } catch (err) {
+            console.error('Error loading Embedded Messaging: ', err);
+        }
+    };
+</script>
+<script type='text/javascript' src='https://pfizermedinfo--test.sandbox.my.site.com/ESWMessagingforWebBrazil/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+</html>
