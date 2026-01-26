@@ -81,16 +81,28 @@ function postIframeMessage(message) {
 
 /**
  * Save current state to session storage before page unload
+ * UPDATED: Enhanced logging for iOS debugging
  */
 window.addEventListener('beforeunload', () => {
   try {
     // Only save state if the bot was actually opened
     if (botOpened) {
       const inputEnabled = (agentCount > 0 || lastBotMessageAllowedInput) ? '1' : '0';
+      
+      console.log('💾 Host: Saving state before unload:', {
+        inputEnabled: inputEnabled,
+        agentCount: agentCount,
+        lastBotMessageAllowedInput: lastBotMessageAllowedInput,
+        userAgent: navigator.userAgent
+      });
+      
       sessionStorage.setItem(SESSION_KEY_INPUT_ENABLED, inputEnabled);
       sessionStorage.setItem(SESSION_KEY_AGENT_COUNT, agentCount.toString());
       sessionStorage.setItem(SESSION_KEY_BOT_ALLOWED, lastBotMessageAllowedInput ? '1' : '0');
-      console.log('💾 Host: Saved state before unload:', { inputEnabled, agentCount, lastBotMessageAllowedInput });
+      
+      console.log('✅ Host: State saved successfully');
+    } else {
+      console.log('⏭️ Host: Bot was never opened, not saving state');
     }
   } catch (err) {
     console.error('❌ Host: Failed to save state:', err);
@@ -99,13 +111,23 @@ window.addEventListener('beforeunload', () => {
 
 /**
  * Restore state from session storage after page load
+ * UPDATED: Enhanced logging for iOS debugging
  * @returns {boolean} True if we should restore enabled state
  */
 function restoreStateFromSession() {
   try {
+    console.log('🔍 Host: Checking session storage...');
+    
     const savedInputState = sessionStorage.getItem(SESSION_KEY_INPUT_ENABLED);
     const savedAgentCount = sessionStorage.getItem(SESSION_KEY_AGENT_COUNT);
     const savedBotAllowed = sessionStorage.getItem(SESSION_KEY_BOT_ALLOWED);
+    
+    console.log('🔍 Host: Session storage values:', {
+      inputEnabled: savedInputState,
+      agentCount: savedAgentCount,
+      botAllowed: savedBotAllowed,
+      userAgent: navigator.userAgent
+    });
     
     // Check if there's any saved state
     if (savedInputState === null && savedAgentCount === null && savedBotAllowed === null) {
