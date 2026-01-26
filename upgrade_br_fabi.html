@@ -20,7 +20,7 @@
 <script type="text/javascript">
 /**
  * Embedded Messaging Input Control - Host Page Script
- * iOS COMPATIBILITY: Uses localStorage with aggressive saving strategy
+ * ROLLBACK VERSION: sessionStorage (worked on desktop)
  */
 
 // ============================================================================
@@ -38,16 +38,9 @@ const EVENT_OP_REMOVE = '"operation":"remove"';
 const EVENT_ROLE_AGENT = '"role":"Agent"';
 const EVENT_CLOSE_CONVERSATION = '"entryType":"CloseConversation"';
 
-// Use localStorage instead of sessionStorage for iOS compatibility
-const STORAGE_KEY_PREFIX = 'embMsg_';
-const STORAGE_KEY_INPUT_ENABLED = STORAGE_KEY_PREFIX + 'inputEnabled';
-const STORAGE_KEY_AGENT_COUNT = STORAGE_KEY_PREFIX + 'agentCount';
-const STORAGE_KEY_BOT_ALLOWED = STORAGE_KEY_PREFIX + 'botAllowed';
-const STORAGE_KEY_TIMESTAMP = STORAGE_KEY_PREFIX + 'timestamp';
-
-const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-console.log('🔍 Host: Device detected - iOS:', isIOS, 'UserAgent:', navigator.userAgent);
+const SESSION_KEY_INPUT_ENABLED = 'embeddedMessaging_inputEnabled';
+const SESSION_KEY_AGENT_COUNT = 'embeddedMessaging_agentCount';
+const SESSION_KEY_BOT_ALLOWED = 'embeddedMessaging_botAllowed';
 
 // ============================================================================
 // IFRAME COMMUNICATION
@@ -68,81 +61,37 @@ function postIframeMessage(message) {
 }
 
 // ============================================================================
-// STATE PERSISTENCE (localStorage for iOS compatibility)
+// STATE PERSISTENCE (Page Refresh Support)
 // ============================================================================
 
-/**
- * Save state using localStorage (more reliable on iOS than sessionStorage)
- */
-function saveState() {
+window.addEventListener('beforeunload', () => {
   try {
-    if (!botOpened) {
-      console.log('⏭️ Host: Bot not opened, not saving state');
-      return;
+    if (botOpened) {
+      const inputEnabled = (agentCount > 0 || lastBotMessageAllowedInput) ? '1' : '0';
+      sessionStorage.setItem(SESSION_KEY_INPUT_ENABLED, inputEnabled);
+      sessionStorage.setItem(SESSION_KEY_AGENT_COUNT, agentCount.toString());
+      sessionStorage.setItem(SESSION_KEY_BOT_ALLOWED, lastBotMessageAllowedInput ? '1' : '0');
+      console.log('💾 Host: Saved state before unload:', { inputEnabled, agentCount, lastBotMessageAllowedInput });
     }
-    
-    const inputEnabled = (agentCount > 0 || lastBotMessageAllowedInput) ? '1' : '0';
-    const timestamp = new Date().getTime();
-    
-    console.log('💾 Host: Attempting to save state:', {
-      inputEnabled: inputEnabled,
-      agentCount: agentCount,
-      lastBotMessageAllowedInput: lastBotMessageAllowedInput,
-      timestamp: timestamp
-    });
-    
-    // Save to localStorage
-    localStorage.setItem(STORAGE_KEY_INPUT_ENABLED, inputEnabled);
-    localStorage.setItem(STORAGE_KEY_AGENT_COUNT, agentCount.toString());
-    localStorage.setItem(STORAGE_KEY_BOT_ALLOWED, lastBotMessageAllowedInput ? '1' : '0');
-    localStorage.setItem(STORAGE_KEY_TIMESTAMP, timestamp.toString());
-    
-    console.log('✅ Host: State saved to localStorage');
-    
-    // Verify it was actually saved
-    const verify = localStorage.getItem(STORAGE_KEY_INPUT_ENABLED);
-    console.log('🔍 Host: Verification - saved value:', verify);
-    
   } catch (err) {
     console.error('❌ Host: Failed to save state:', err);
   }
-}
+});
 
-/**
- * Restore state from localStorage
- */
-function restoreStateFromStorage() {
+function restoreStateFromSession() {
   try {
-    console.log('🔍 Host: Checking localStorage for saved state...');
+    const savedInputState = sessionStorage.getItem(SESSION_KEY_INPUT_ENABLED);
+    const savedAgentCount = sessionStorage.getItem(SESSION_KEY_AGENT_COUNT);
+    const savedBotAllowed = sessionStorage.getItem(SESSION_KEY_BOT_ALLOWED);
     
-    const savedInputState = localStorage.getItem(STORAGE_KEY_INPUT_ENABLED);
-    const savedAgentCount = localStorage.getItem(STORAGE_KEY_AGENT_COUNT);
-    const savedBotAllowed = localStorage.getItem(STORAGE_KEY_BOT_ALLOWED);
-    const savedTimestamp = localStorage.getItem(STORAGE_KEY_TIMESTAMP);
-    
-    console.log('🔍 Host: localStorage values:', {
+    console.log('🔍 Host: Session storage values:', {
       inputEnabled: savedInputState,
       agentCount: savedAgentCount,
-      botAllowed: savedBotAllowed,
-      timestamp: savedTimestamp
+      botAllowed: savedBotAllowed
     });
     
-    // Check if state is too old (more than 10 minutes)
-    if (savedTimestamp) {
-      const age = new Date().getTime() - parseInt(savedTimestamp, 10);
-      const ageMinutes = Math.floor(age / 60000);
-      console.log('🕐 Host: Saved state age:', ageMinutes, 'minutes');
-      
-      if (age > 600000) { // 10 minutes
-        console.log('⏰ Host: Saved state too old, ignoring');
-        clearSavedState();
-        return false;
-      }
-    }
-    
-    // Check if there's any saved state
     if (savedInputState === null && savedAgentCount === null && savedBotAllowed === null) {
-      console.log('📝 Host: No previous state found in localStorage');
+      console.log('📝 Host: No previous session state found');
       return false;
     }
     
@@ -156,7 +105,6 @@ function restoreStateFromStorage() {
       console.log('🔄 Host: Restored lastBotMessageAllowedInput:', lastBotMessageAllowedInput);
     }
     
-    // Determine if input should be enabled based on restored state
     if (savedInputState === '1' && (agentCount > 0 || lastBotMessageAllowedInput)) {
       console.log('✅ Host: Page refresh - will restore ENABLED state when bot opens');
       return true;
@@ -170,55 +118,18 @@ function restoreStateFromStorage() {
   }
 }
 
-/**
- * Clear saved state from localStorage
- */
-function clearSavedState() {
-  try {
-    localStorage.removeItem(STORAGE_KEY_INPUT_ENABLED);
-    localStorage.removeItem(STORAGE_KEY_AGENT_COUNT);
-    localStorage.removeItem(STORAGE_KEY_BOT_ALLOWED);
-    localStorage.removeItem(STORAGE_KEY_TIMESTAMP);
-    console.log('🧹 Host: Cleared saved state from localStorage');
-  } catch (err) {
-    console.error('❌ Host: Failed to clear saved state:', err);
-  }
-}
+const shouldRestoreEnabled = restoreStateFromSession();
 
-// Save state on page visibility change (more reliable than beforeunload on iOS)
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden' && botOpened) {
-    console.log('👁️ Host: Page hidden, saving state...');
-    saveState();
-  }
-});
-
-// Save state before page unload (backup, not reliable on iOS)
-window.addEventListener('beforeunload', () => {
-  console.log('🚪 Host: beforeunload fired, saving state...');
-  saveState();
-});
-
-// Save state before page is frozen (iOS-specific event)
-window.addEventListener('pagehide', () => {
-  console.log('❄️ Host: pagehide fired, saving state...');
-  saveState();
-});
-
-// Aggressive periodic saving (every 1 second when bot is open)
-setInterval(() => {
-  if (botOpened) {
-    saveState();
-  }
-}, 1000);
-
-// Restore state on load
-const shouldRestoreEnabled = restoreStateFromStorage();
-
-// Clear old state after 10 minutes
 setTimeout(() => {
-  clearSavedState();
-}, 600000);
+  try {
+    sessionStorage.removeItem(SESSION_KEY_INPUT_ENABLED);
+    sessionStorage.removeItem(SESSION_KEY_AGENT_COUNT);
+    sessionStorage.removeItem(SESSION_KEY_BOT_ALLOWED);
+    console.log('🧹 Host: Cleared session storage after 5 minutes');
+  } catch (err) {
+    console.error('❌ Host: Failed to clear session storage:', err);
+  }
+}, 300000);
 
 // ============================================================================
 // MESSAGE EVENT HANDLER
@@ -226,12 +137,10 @@ setTimeout(() => {
 
 window.addEventListener("message", function(event) {
   try {
-    // Iframe initialization
     if (event.data === "iframe-ready") {
       console.log('✅ Host: Bot opened - iframe ready signal received');
       botOpened = true;
       
-      // Apply correct initial state based on restored state
       if (shouldRestoreEnabled && (agentCount > 0 || lastBotMessageAllowedInput)) {
         postIframeMessage("InputEnable");
         console.log('🔓 Host: Restored enabled state after page refresh');
@@ -239,13 +148,9 @@ window.addEventListener("message", function(event) {
         postIframeMessage("InputDisable");
         console.log('🔒 Host: Applied disabled state on bot open');
       }
-      
-      // Save initial state
-      saveState();
       return;
     }
     
-    // Parse conversation events
     const details = event?.data?.data?.eventDetails?.conversationEntry;
     const payload = details?.entryPayload;
     const entryType = details?.entryType;
@@ -255,30 +160,24 @@ window.addEventListener("message", function(event) {
       return;
     }
     
-    // Mark that bot has been opened
     if (!botOpened) {
       botOpened = true;
       console.log('✅ Host: Bot opened - conversation events detected');
     }
     
-    // Track agent participation changes
     if (entryType === EVENT_PARTICIPANT_CHANGED) {
       if (payload.includes(EVENT_OP_ADD) && payload.includes(EVENT_ROLE_AGENT)) {
         agentCount++;
         console.log('👤 Host: Agent joined (count:', agentCount + ')');
-        saveState();
       } else if (payload.includes(EVENT_OP_REMOVE) && payload.includes(EVENT_ROLE_AGENT)) {
         agentCount--;
         console.log('👋 Host: Agent left (count:', agentCount + ')');
-        saveState();
       }
     }
     
-    // Decision logic
     if (agentCount > 0) {
       postIframeMessage("InputEnable");
       lastBotMessageAllowedInput = false;
-      saveState();
       return;
     }
     
@@ -286,7 +185,6 @@ window.addEventListener("message", function(event) {
       postIframeMessage("InputEnable");
       lastBotMessageAllowedInput = true;
       console.log('🤖 Host: Bot requested free-text input');
-      saveState();
       return;
     }
     
@@ -294,7 +192,6 @@ window.addEventListener("message", function(event) {
       postIframeMessage("InputDisable");
       lastBotMessageAllowedInput = false;
       console.log('🤖 Host: Bot in scripted mode (no free-text)');
-      saveState();
       return;
     }
     
@@ -303,7 +200,6 @@ window.addEventListener("message", function(event) {
       lastBotMessageAllowedInput = false;
       agentCount = 0;
       console.log('🔚 Host: Conversation closed');
-      clearSavedState();
       return;
     }
     
@@ -313,35 +209,6 @@ window.addEventListener("message", function(event) {
   }
 });
 
-console.log('🚀 Host: Input control script initialized (iOS mode:', isIOS, ')');
+console.log('🚀 Host: Input control script initialized (waiting for user to open bot)');
 </script>
-
-<!-- Embedded Messaging Bootstrap Script -->
-<script type='text/javascript'>
-  window.addEventListener("onEmbeddedMessagingReady", e => {
-    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-      input_Country: "BR",
-      input_ISOCountry: "BR",
-      input_ChannelDetails: "FABI - Website | Corporate"
-    });
-  });
-  
-  function initEmbeddedMessaging() {
-    try {
-      embeddedservice_bootstrap.settings.language = 'pt_BR';
-      embeddedservice_bootstrap.init(
-        '00D9O00000Ic6W6',
-        'PFZ_BR_Messaging',
-        'https://pfizermedinfo--test.sandbox.my.site.com/ESWMessagingforWebBrazil',
-        {
-          scrt2URL: 'https://pfizermedinfo--test.sandbox.my.salesforce-scrt.com'
-        }
-      );
-    } catch (err) {
-      console.error('Error loading Embedded Messaging: ', err);
-    }
-  }
-</script>
-<script type='text/javascript' src='https://pfizermedinfo--test.sandbox.my.site.com/ESWMessagingforWebBrazil/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-
 </html>
