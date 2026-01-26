@@ -20,17 +20,27 @@
 <script type="text/javascript">
 /**
  * Embedded Messaging Input Control - Host Page Script
- * ROLLBACK VERSION: sessionStorage (worked on desktop)
+ * Purpose: Manage free-text input enable/disable based on conversation state
+ * GxP Requirement: Prevent free-text input during scripted bot interactions
+ * 
+ * NOTE: The bot iframe only loads when the user clicks to open the chat.
+ * The iframe does not exist on initial page load.
  */
 
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
 
+/** Count of currently connected human agents */
 let agentCount = 0;
+
+/** Track if we're allowing input based on last bot message */
 let lastBotMessageAllowedInput = false;
+
+/** Track if the bot has been opened by the user */
 let botOpened = false;
 
+/** Constant markers for detecting conversation events */
 const BOT_FLAG_ENABLE = '➤';
 const EVENT_PARTICIPANT_CHANGED = 'ParticipantChanged';
 const EVENT_OP_ADD = '"operation":"add"';
@@ -38,6 +48,7 @@ const EVENT_OP_REMOVE = '"operation":"remove"';
 const EVENT_ROLE_AGENT = '"role":"Agent"';
 const EVENT_CLOSE_CONVERSATION = '"entryType":"CloseConversation"';
 
+/** Session storage keys for state persistence across page refreshes */
 const SESSION_KEY_INPUT_ENABLED = 'embeddedMessaging_inputEnabled';
 const SESSION_KEY_AGENT_COUNT = 'embeddedMessaging_agentCount';
 const SESSION_KEY_BOT_ALLOWED = 'embeddedMessaging_botAllowed';
@@ -46,16 +57,25 @@ const SESSION_KEY_BOT_ALLOWED = 'embeddedMessaging_botAllowed';
 // IFRAME COMMUNICATION
 // ============================================================================
 
+/**
+ * Get the contentWindow of the embedded messaging iframe
+ * @returns {Window|null} contentWindow of iframe, or null if not ready
+ */
 function getIframe() {
   return document.getElementById("embeddedMessagingFrame")?.contentWindow || null;
 }
 
+/**
+ * Post a message to the embedded messaging iframe
+ * @param {"InputEnable" | "InputDisable"} message
+ */
 function postIframeMessage(message) {
   const iframeWindow = getIframe();
   if (iframeWindow) {
     iframeWindow.postMessage(message, "*");
     console.log('📤 Host: Sent message to iframe:', message);
   } else {
+    // This is normal if bot hasn't been opened yet
     console.log('⏸️ Host: Bot not opened yet, message queued:', message);
   }
 }
@@ -64,8 +84,12 @@ function postIframeMessage(message) {
 // STATE PERSISTENCE (Page Refresh Support)
 // ============================================================================
 
+/**
+ * Save current state to session storage before page unload
+ */
 window.addEventListener('beforeunload', () => {
   try {
+    // Only save state if the bot was actually opened
     if (botOpened) {
       const inputEnabled = (agentCount > 0 || lastBotMessageAllowedInput) ? '1' : '0';
       sessionStorage.setItem(SESSION_KEY_INPUT_ENABLED, inputEnabled);
@@ -78,18 +102,17 @@ window.addEventListener('beforeunload', () => {
   }
 });
 
+/**
+ * Restore state from session storage after page load
+ * @returns {boolean} True if we should restore enabled state
+ */
 function restoreStateFromSession() {
   try {
     const savedInputState = sessionStorage.getItem(SESSION_KEY_INPUT_ENABLED);
     const savedAgentCount = sessionStorage.getItem(SESSION_KEY_AGENT_COUNT);
     const savedBotAllowed = sessionStorage.getItem(SESSION_KEY_BOT_ALLOWED);
     
-    console.log('🔍 Host: Session storage values:', {
-      inputEnabled: savedInputState,
-      agentCount: savedAgentCount,
-      botAllowed: savedBotAllowed
-    });
-    
+    // Check if there's any saved state
     if (savedInputState === null && savedAgentCount === null && savedBotAllowed === null) {
       console.log('📝 Host: No previous session state found');
       return false;
@@ -105,6 +128,7 @@ function restoreStateFromSession() {
       console.log('🔄 Host: Restored lastBotMessageAllowedInput:', lastBotMessageAllowedInput);
     }
     
+    // Determine if input should be enabled based on restored state
     if (savedInputState === '1' && (agentCount > 0 || lastBotMessageAllowedInput)) {
       console.log('✅ Host: Page refresh - will restore ENABLED state when bot opens');
       return true;
@@ -114,12 +138,16 @@ function restoreStateFromSession() {
     }
   } catch (err) {
     console.error('❌ Host: Failed to restore state:', err);
-    return false;
+    return false; // Default to disabled on error
   }
 }
 
+// Track if we should restore enabled state
 const shouldRestoreEnabled = restoreStateFromSession();
 
+/**
+ * Clear session storage after timeout (prevent stale state)
+ */
 setTimeout(() => {
   try {
     sessionStorage.removeItem(SESSION_KEY_INPUT_ENABLED);
@@ -129,18 +157,26 @@ setTimeout(() => {
   } catch (err) {
     console.error('❌ Host: Failed to clear session storage:', err);
   }
-}, 300000);
+}, 300000); // 5 minutes
 
 // ============================================================================
 // MESSAGE EVENT HANDLER
 // ============================================================================
 
+/**
+ * Handler for postMessage events from the embedded messaging iframe
+ * @param {MessageEvent<MessageData|string>} event
+ */
 window.addEventListener("message", function(event) {
   try {
+    // ========================================================================
+    // SPECIAL CASE: Iframe initialization (bot has been opened)
+    // ========================================================================
     if (event.data === "iframe-ready") {
       console.log('✅ Host: Bot opened - iframe ready signal received');
       botOpened = true;
       
+      // Apply correct initial state based on session restoration
       if (shouldRestoreEnabled && (agentCount > 0 || lastBotMessageAllowedInput)) {
         postIframeMessage("InputEnable");
         console.log('🔓 Host: Restored enabled state after page refresh');
@@ -151,20 +187,28 @@ window.addEventListener("message", function(event) {
       return;
     }
     
+    // ========================================================================
+    // PARSE CONVERSATION EVENTS
+    // ========================================================================
     const details = event?.data?.data?.eventDetails?.conversationEntry;
     const payload = details?.entryPayload;
     const entryType = details?.entryType;
     const senderRole = details?.sender?.role;
     
     if (typeof payload !== "string") {
+      // Not a valid conversation event
       return;
     }
     
+    // Mark that bot has been opened (conversation events are flowing)
     if (!botOpened) {
       botOpened = true;
       console.log('✅ Host: Bot opened - conversation events detected');
     }
     
+    // ========================================================================
+    // TRACK AGENT PARTICIPATION CHANGES
+    // ========================================================================
     if (entryType === EVENT_PARTICIPANT_CHANGED) {
       if (payload.includes(EVENT_OP_ADD) && payload.includes(EVENT_ROLE_AGENT)) {
         agentCount++;
@@ -175,12 +219,18 @@ window.addEventListener("message", function(event) {
       }
     }
     
+    // ========================================================================
+    // DECISION LOGIC: Enable or Disable Input
+    // ========================================================================
+    
+    // PRIORITY 1: Agent is connected → Enable
     if (agentCount > 0) {
       postIframeMessage("InputEnable");
-      lastBotMessageAllowedInput = false;
+      lastBotMessageAllowedInput = false; // Reset bot flag when agent takes over
       return;
     }
     
+    // PRIORITY 2: Bot sent message with enable flag → Enable
     if (senderRole === "Chatbot" && payload.includes(BOT_FLAG_ENABLE)) {
       postIframeMessage("InputEnable");
       lastBotMessageAllowedInput = true;
@@ -188,6 +238,7 @@ window.addEventListener("message", function(event) {
       return;
     }
     
+    // PRIORITY 3: Bot sent message WITHOUT enable flag → Disable
     if (senderRole === "Chatbot" && !payload.includes(BOT_FLAG_ENABLE)) {
       postIframeMessage("InputDisable");
       lastBotMessageAllowedInput = false;
@@ -195,20 +246,54 @@ window.addEventListener("message", function(event) {
       return;
     }
     
+    // PRIORITY 4: Conversation closed → Disable
     if (payload.includes(EVENT_CLOSE_CONVERSATION)) {
       postIframeMessage("InputDisable");
       lastBotMessageAllowedInput = false;
-      agentCount = 0;
+      agentCount = 0; // Reset agent count
       console.log('🔚 Host: Conversation closed');
       return;
     }
     
+    // DEFAULT: If no conditions met, keep disabled (safe default)
+    // Don't send unnecessary disable commands to reduce noise
+    
   } catch (err) {
     console.error("❌ Host: Error processing message event:", err);
+    // CRITICAL: Default to disabled state on any error
     postIframeMessage("InputDisable");
   }
 });
 
 console.log('🚀 Host: Input control script initialized (waiting for user to open bot)');
 </script>
+
+<!-- Embedded Messaging Bootstrap Script -->
+<script type='text/javascript'>
+  window.addEventListener("onEmbeddedMessagingReady", e => {
+    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+      input_Country: "BR",
+      input_ISOCountry: "BR",
+      input_ChannelDetails: "FABI - Website | Corporate"
+    });
+  });
+  
+  function initEmbeddedMessaging() {
+    try {
+      embeddedservice_bootstrap.settings.language = 'pt_BR';
+      embeddedservice_bootstrap.init(
+        '00D9O00000Ic6W6',
+        'PFZ_BR_Messaging',
+        'https://pfizermedinfo--test.sandbox.my.site.com/ESWMessagingforWebBrazil',
+        {
+          scrt2URL: 'https://pfizermedinfo--test.sandbox.my.salesforce-scrt.com'
+        }
+      );
+    } catch (err) {
+      console.error('Error loading Embedded Messaging: ', err);
+    }
+  }
+</script>
+<script type='text/javascript' src='https://pfizermedinfo--test.sandbox.my.site.com/ESWMessagingforWebBrazil/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
 </html>
