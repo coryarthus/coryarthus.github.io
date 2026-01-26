@@ -265,6 +265,15 @@ console.log('🚀 Host: Input control script initialized (waiting for user to op
 
 <!-- Embedded Messaging Bootstrap Script -->
 <script type='text/javascript'>
+
+  window.addEventListener("onEmbeddedMessagingReady", e => {
+    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+      input_Country: "BR",
+      input_ISOCountry: "BR",
+      input_ChannelDetails: "FABI - Website | Corporate"
+    });
+  });
+  
 	function initEmbeddedMessaging() {
 		try {
 			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
