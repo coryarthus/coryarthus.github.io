@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GRACE - Fabi Image Serving Test</title>
+  <title>GRACE — Fabi Image Serving Test (Upgrade Sandbox)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -25,6 +25,19 @@
       font-weight: 600;
       color: #1a1a2e;
       margin-bottom: 6px;
+    }
+
+    .env-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #fff3cd;
+      color: #856404;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
     }
 
     .page-header p {
@@ -155,10 +168,43 @@
       border: 1px solid #e2e6ec;
     }
 
-    .divider {
-      border: none;
-      border-top: 1px solid #e2e6ec;
-      margin: 14px 0;
+    .bulk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .bulk-item {
+      border: 1px solid #e2e6ec;
+      border-radius: 6px;
+      padding: 10px;
+      background: #fafbfc;
+    }
+
+    .bulk-imgbox {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f7fa;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .bulk-imgbox img {
+      max-width: 100%;
+      max-height: 60px;
+      object-fit: contain;
+    }
+
+    .bulk-docid {
+      font-family: monospace;
+      font-size: 10px;
+      color: #8891a0;
+      word-break: break-all;
+      margin-top: 6px;
     }
 
     .summary-card {
@@ -200,11 +246,11 @@
 
     .summary-table td:first-child {
       color: #5a6070;
-      width: 140px;
+      width: 160px;
       padding-right: 16px;
     }
 
-    .summary-table td:last-child {
+    .summary-table td.mono {
       font-family: 'SF Mono', 'Fira Code', monospace;
       font-size: 11px;
     }
@@ -220,20 +266,21 @@
 <body>
 
   <div class="page-header">
+    <div class="env-badge">Upgrade Sandbox</div>
     <h1>GRACE Document Folder — Image Serving Test</h1>
-    <p>Verifies that images stored in the GRACE Images folder continue to serve after folder permissions are changed from Public to Hidden. Each image below is loaded directly via its production URL. A visible image confirms that IsPublic = true allows URL-based access independent of folder permissions.</p>
+    <p>Verifies that images stored in the GRACE Images folder continue to serve after folder permissions are changed from Public to Hidden. Open this page while logged into <strong>pfizermedinfo--upgrade.sandbox.my.salesforce.com</strong>. A visible image confirms that IsPublic = true allows URL-based access independent of folder permissions.</p>
   </div>
 
   <div class="test-grid">
 
-    <!-- Test 1: Fabi Bot Avatar -->
+    <!-- Test 1: Fabi Bot Avatar (confirmed active config) -->
     <div class="test-card">
-      <h2>Test 1 — Fabi Bot Avatar / Chat Button Image</h2>
+      <h2>Test 1 — Fabi Bot Avatar / Chat Button Image (Confirmed Active Config)</h2>
       <div class="image-row">
         <div class="image-box">
           <img
             id="img-fabi"
-            src="https://pfizermedinfo.my.salesforce.com/servlet/servlet.ImageServer?id=015Of000006LOIP&oid=00D3k000000uHav&lastMod=1763866960000"
+            src="https://pfizermedinfo--upgrade.sandbox.my.salesforce.com/servlet/servlet.ImageServer?id=0159V00000EDUWT&oid=00D9V00000D7QJF&lastMod=1761654709000"
             alt="Fabi bot avatar"
             onload="setStatus('fabi', 'ok')"
             onerror="setStatus('fabi', 'fail')"
@@ -241,26 +288,25 @@
         </div>
         <div class="image-meta">
           <div class="label">PFZ_Fabi — Bot &amp; AI Agent Avatar / Chat Button</div>
-          <div class="doc-id">Document ID: 015Of000006LOIPIA4</div>
+          <div class="doc-id">Document ID: 0159V00000EDUWT</div>
           <div class="status-row">
             <span class="status-badge checking" id="status-fabi">
               <span class="status-dot"></span>
               Checking...
             </span>
           </div>
+          <p style="font-size:12px; color:#5a6070; margin-top:8px;">Note: this document ID is outside the Images folder scope. Expected to serve regardless of the folder change.</p>
         </div>
       </div>
       <div class="url-display">
-        https://pfizermedinfo.my.salesforce.com/servlet/servlet.ImageServer?id=015Of000006LOIP&amp;oid=00D3k000000uHav&amp;lastMod=1763866960000
+        https://pfizermedinfo--upgrade.sandbox.my.salesforce.com/servlet/servlet.ImageServer?id=0159V00000EDUWT&amp;oid=00D9V00000D7QJF&amp;lastMod=1761654709000
       </div>
     </div>
 
-    <!-- Test 2: All remaining Images folder documents -->
+    <!-- Test 2: All Images folder documents -->
     <div class="test-card">
-      <h2>Test 2 — Remaining Images Folder Documents</h2>
-
-      <div id="bulk-images" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
-      </div>
+      <h2>Test 2 — Images Folder Documents (All 15)</h2>
+      <div class="bulk-grid" id="bulk-images"></div>
     </div>
 
     <!-- Summary -->
@@ -276,15 +322,19 @@
         <tbody>
           <tr>
             <td>Org</td>
-            <td>pfizermedinfo (Production)</td>
+            <td class="mono">pfizermedinfo--upgrade (Sandbox)</td>
+          </tr>
+          <tr>
+            <td>Org ID</td>
+            <td class="mono">00D9V00000D7QJF</td>
           </tr>
           <tr>
             <td>Folder</td>
-            <td>Images (00l5I000000pchiQAA)</td>
+            <td class="mono">Images (MED_Images)</td>
           </tr>
           <tr>
             <td>Folder permission</td>
-            <td>Public → Hidden (pending change)</td>
+            <td>Public → Hidden (change under test)</td>
           </tr>
           <tr>
             <td>Access mechanism</td>
@@ -314,63 +364,68 @@
   </div>
 
   <script>
-    // All 15 document IDs from the Images folder
-    const imageDocIds = [
-      { id: '01568000000rEIdAAM', label: 'Doc 01568000000rEIdAAM' },
-      { id: '01568000000zOC0AAM', label: 'Doc 01568000000zOC0AAM' },
-      { id: '015680000010WKmAAM', label: 'Doc 015680000010WKmAAM' },
-      { id: '015Of000006LOIPIA4', label: 'Doc 015Of000006LOIPIA4 (Fabi)' },
-      { id: '015680000012vmhAAA', label: 'Doc 015680000012vmhAAA' },
-      { id: '01568000000VQfSAAW', label: 'Doc 01568000000VQfSAAW' },
-      { id: '01568000000VQfXAAW', label: 'Doc 01568000000VQfXAAW' },
-      { id: '01568000000VQfcAAG', label: 'Doc 01568000000VQfcAAG' },
-      { id: '01568000000VQfhAAG', label: 'Doc 01568000000VQfhAAG' },
-      { id: '015Of000003DQsbIAG', label: 'Doc 015Of000003DQsbIAG' },
-      { id: '015Of000006LOBxIAO', label: 'Doc 015Of000006LOBxIAO' },
-      { id: '0155I000000YgS1QAK', label: 'Doc 0155I000000YgS1QAK' },
-      { id: '0156800000128OIAAY', label: 'Doc 0156800000128OIAAY' },
-      { id: '01568000000SCzVAAW', label: 'Doc 01568000000SCzVAAW' },
-      { id: '0155I000000YgS2QAK', label: 'Doc 0155I000000YgS2QAK (Verteo)' }
+    const BASE = 'https://pfizermedinfo--upgrade.sandbox.my.salesforce.com';
+    const OID  = '00D9V00000D7QJF';
+
+    // 15 document IDs from the Images folder (carried over from prod refresh)
+    const docs = [
+      { id: '01568000000rEIdAAM', label: '' },
+      { id: '01568000000zOC0AAM', label: '' },
+      { id: '015680000010WKmAAM', label: '' },
+      { id: '015Of000006LOIPIA4', label: '(Fabi — prod ID)' },
+      { id: '015680000012vmhAAA', label: '' },
+      { id: '01568000000VQfSAAW', label: '' },
+      { id: '01568000000VQfXAAW', label: '' },
+      { id: '01568000000VQfcAAG', label: '' },
+      { id: '01568000000VQfhAAG', label: '' },
+      { id: '015Of000003DQsbIAG', label: '' },
+      { id: '015Of000006LOBxIAO', label: '' },
+      { id: '0155I000000YgS1QAK', label: '' },
+      { id: '0156800000128OIAAY', label: '' },
+      { id: '01568000000SCzVAAW', label: '' },
+      { id: '0155I000000YgS2QAK', label: '(Verteo — IsPublic=false)' }
     ];
 
     const statuses = {};
     const container = document.getElementById('bulk-images');
 
-    imageDocIds.forEach(doc => {
+    docs.forEach(doc => {
       statuses[doc.id] = 'checking';
 
       const wrapper = document.createElement('div');
-      wrapper.style.cssText = 'border: 1px solid #e2e6ec; border-radius: 6px; padding: 10px; background: #fafbfc;';
+      wrapper.className = 'bulk-item';
 
       const imgBox = document.createElement('div');
-      imgBox.style.cssText = 'width: 100%; height: 60px; display: flex; align-items: center; justify-content: center; background: #f5f7fa; border-radius: 4px; margin-bottom: 8px; overflow: hidden;';
+      imgBox.className = 'bulk-imgbox';
 
       const img = document.createElement('img');
-      img.src = `https://pfizermedinfo.my.salesforce.com/servlet/servlet.FileDownload?file=${doc.id}`;
-      img.alt = doc.label;
-      img.style.cssText = 'max-width: 100%; max-height: 60px; object-fit: contain;';
+      // Use FileDownload for the bulk grid (standard document serving)
+      img.src = `${BASE}/servlet/servlet.FileDownload?file=${doc.id}`;
+      img.alt = doc.id;
 
       const badge = document.createElement('span');
       badge.id = `bulk-status-${doc.id}`;
       badge.className = 'status-badge checking';
-      badge.innerHTML = '<span class="status-dot"></span> Checking...';
-      badge.style.cssText = 'font-size: 11px; margin-bottom: 4px; display: inline-flex;';
+      badge.style.cssText = 'font-size:11px; display:inline-flex; margin-bottom:4px;';
+      badge.innerHTML = '<span class="status-dot"></span>&nbsp;Checking...';
 
-      const labelEl = document.createElement('div');
-      labelEl.style.cssText = 'font-family: monospace; font-size: 10px; color: #8891a0; word-break: break-all; margin-top: 6px;';
-      labelEl.textContent = doc.id;
+      const docLabel = document.createElement('div');
+      docLabel.className = 'bulk-docid';
+      docLabel.textContent = doc.id + (doc.label ? ' ' + doc.label : '');
 
       img.onload = () => {
         statuses[doc.id] = 'ok';
         badge.className = 'status-badge ok';
-        badge.innerHTML = '<span class="status-dot"></span> Served';
+        badge.style.cssText = 'font-size:11px; display:inline-flex; margin-bottom:4px;';
+        badge.innerHTML = '<span class="status-dot"></span>&nbsp;Served';
         updateOverall();
       };
 
       img.onerror = () => {
         statuses[doc.id] = 'fail';
         badge.className = 'status-badge fail';
-        badge.innerHTML = '<span class="status-dot"></span> Failed';
+        badge.style.cssText = 'font-size:11px; display:inline-flex; margin-bottom:4px;';
+        badge.innerHTML = '<span class="status-dot"></span>&nbsp;Failed';
         imgBox.style.background = '#fff5f5';
         updateOverall();
       };
@@ -378,41 +433,41 @@
       imgBox.appendChild(img);
       wrapper.appendChild(imgBox);
       wrapper.appendChild(badge);
-      wrapper.appendChild(labelEl);
+      wrapper.appendChild(docLabel);
       container.appendChild(wrapper);
     });
 
     function setStatus(key, result) {
-      const el = document.getElementById(`status-${key}`);
+      const el = document.getElementById('status-' + key);
       if (!el) return;
       if (result === 'ok') {
         el.className = 'status-badge ok';
-        el.innerHTML = '<span class="status-dot"></span> Image served';
+        el.innerHTML = '<span class="status-dot"></span>&nbsp;Image served';
       } else {
         el.className = 'status-badge fail';
-        el.innerHTML = '<span class="status-dot"></span> Failed to load';
+        el.innerHTML = '<span class="status-dot"></span>&nbsp;Failed to load';
       }
-      updateOverall();
     }
 
     function updateOverall() {
       const vals = Object.values(statuses);
       const total = vals.length;
-      const done = vals.filter(v => v !== 'checking').length;
+      const done  = vals.filter(v => v !== 'checking').length;
       const failed = vals.filter(v => v === 'fail').length;
 
-      document.getElementById('total-count').textContent = `${total} images`;
+      document.getElementById('total-count').textContent = total + ' images';
 
+      const el = document.getElementById('overall-result');
       if (done < total) {
-        document.getElementById('overall-result').textContent = `Checking... (${done}/${total} complete)`;
+        el.textContent = 'Checking... (' + done + '/' + total + ' complete)';
       } else if (failed === 0) {
-        document.getElementById('overall-result').textContent = 'PASS — All images served successfully';
-        document.getElementById('overall-result').style.color = '#0a5234';
-        document.getElementById('overall-result').style.fontWeight = '600';
+        el.textContent = 'PASS — All images served successfully';
+        el.style.color = '#0a5234';
+        el.style.fontWeight = '600';
       } else {
-        document.getElementById('overall-result').textContent = `FAIL — ${failed} image(s) did not serve`;
-        document.getElementById('overall-result').style.color = '#842029';
-        document.getElementById('overall-result').style.fontWeight = '600';
+        el.textContent = 'FAIL — ' + failed + ' image(s) did not serve';
+        el.style.color = '#842029';
+        el.style.fontWeight = '600';
       }
     }
 
