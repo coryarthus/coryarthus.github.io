@@ -1,343 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Upgrade Fabi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRACE - Fabi Image Serving Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      color: #1a1a2e;
+      padding: 40px 24px;
+      min-height: 100vh;
+    }
+
+    .page-header {
+      max-width: 720px;
+      margin: 0 auto 32px;
+    }
+
+    .page-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 6px;
+    }
+
+    .page-header p {
+      font-size: 14px;
+      color: #5a6070;
+      line-height: 1.5;
+    }
+
+    .test-grid {
+      max-width: 720px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .test-card {
+      background: #fff;
+      border: 1px solid #e2e6ec;
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+
+    .test-card h2 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #8891a0;
+      margin-bottom: 14px;
+    }
+
+    .image-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .image-box {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border: 1px solid #e2e6ec;
+      border-radius: 6px;
+      background: #f5f7fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .image-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .image-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .image-meta .label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+
+    .image-meta .doc-id {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: #5a6070;
+      background: #f5f7fa;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .status-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .status-badge.checking {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-badge.ok {
+      background: #d1e7dd;
+      color: #0a5234;
+    }
+
+    .status-badge.fail {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .url-display {
+      margin-top: 12px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: #5a6070;
+      word-break: break-all;
+      line-height: 1.6;
+      background: #f5f7fa;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e6ec;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e2e6ec;
+      margin: 14px 0;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid #e2e6ec;
+      border-radius: 8px;
+      padding: 16px 24px;
+    }
+
+    .summary-card h2 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #8891a0;
+      margin-bottom: 12px;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .summary-table th {
+      text-align: left;
+      font-weight: 600;
+      color: #5a6070;
+      padding: 6px 0;
+      border-bottom: 1px solid #e2e6ec;
+    }
+
+    .summary-table td {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f2f5;
+      color: #1a1a2e;
+      vertical-align: top;
+    }
+
+    .summary-table td:first-child {
+      color: #5a6070;
+      width: 140px;
+      padding-right: 16px;
+    }
+
+    .summary-table td:last-child {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      color: #8891a0;
+      margin-top: 20px;
+      text-align: right;
+    }
+  </style>
 </head>
-
 <body>
-  <h1>Fabi upgrade site</h1>
-  
-  <!-- TEMPORARY: Mobile DevTools for iPhone Testing -->
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
 
-</body>
-</html>
-</body>
+  <div class="page-header">
+    <h1>GRACE Document Folder — Image Serving Test</h1>
+    <p>Verifies that images stored in the GRACE Images folder continue to serve after folder permissions are changed from Public to Hidden. Each image below is loaded directly via its production URL. A visible image confirms that IsPublic = true allows URL-based access independent of folder permissions.</p>
+  </div>
 
-<script type="text/javascript">
-/**
- * Embedded Messaging Input Control - Host Page Script
- * iOS FIX: Uses localStorage for better persistence on iOS Safari
- */
+  <div class="test-grid">
 
-// ============================================================================
-// CONFIGURATION
-// ============================================================================
+    <!-- Test 1: Fabi Bot Avatar -->
+    <div class="test-card">
+      <h2>Test 1 — Fabi Bot Avatar / Chat Button Image</h2>
+      <div class="image-row">
+        <div class="image-box">
+          <img
+            id="img-fabi"
+            src="https://pfizermedinfo.my.salesforce.com/servlet/servlet.ImageServer?id=015Of000006LOIP&oid=00D3k000000uHav&lastMod=1763866960000"
+            alt="Fabi bot avatar"
+            onload="setStatus('fabi', 'ok')"
+            onerror="setStatus('fabi', 'fail')"
+          />
+        </div>
+        <div class="image-meta">
+          <div class="label">PFZ_Fabi — Bot &amp; AI Agent Avatar / Chat Button</div>
+          <div class="doc-id">Document ID: 015Of000006LOIPIA4</div>
+          <div class="status-row">
+            <span class="status-badge checking" id="status-fabi">
+              <span class="status-dot"></span>
+              Checking...
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="url-display">
+        https://pfizermedinfo.my.salesforce.com/servlet/servlet.ImageServer?id=015Of000006LOIP&amp;oid=00D3k000000uHav&amp;lastMod=1763866960000
+      </div>
+    </div>
 
-let agentCount = 0;
-let lastBotMessageAllowedInput = false;
-let botOpened = false;
+    <!-- Test 2: All remaining Images folder documents -->
+    <div class="test-card">
+      <h2>Test 2 — Remaining Images Folder Documents</h2>
 
-const BOT_FLAG_ENABLE = '➤';
-const EVENT_PARTICIPANT_CHANGED = 'ParticipantChanged';
-const EVENT_OP_ADD = '"operation":"add"';
-const EVENT_OP_REMOVE = '"operation":"remove"';
-const EVENT_ROLE_AGENT = '"role":"Agent"';
-const EVENT_CLOSE_CONVERSATION = '"entryType":"CloseConversation"';
+      <div id="bulk-images" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+      </div>
+    </div>
 
-// Use localStorage instead of sessionStorage for iOS compatibility
-const STORAGE_KEY_PREFIX = 'embMsg_';
-const STORAGE_KEY_INPUT_ENABLED = STORAGE_KEY_PREFIX + 'inputEnabled';
-const STORAGE_KEY_AGENT_COUNT = STORAGE_KEY_PREFIX + 'agentCount';
-const STORAGE_KEY_BOT_ALLOWED = STORAGE_KEY_PREFIX + 'botAllowed';
-const STORAGE_KEY_TIMESTAMP = STORAGE_KEY_PREFIX + 'timestamp';
+    <!-- Summary -->
+    <div class="summary-card">
+      <h2>Test Summary</h2>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Org</td>
+            <td>pfizermedinfo (Production)</td>
+          </tr>
+          <tr>
+            <td>Folder</td>
+            <td>Images (00l5I000000pchiQAA)</td>
+          </tr>
+          <tr>
+            <td>Folder permission</td>
+            <td>Public → Hidden (pending change)</td>
+          </tr>
+          <tr>
+            <td>Access mechanism</td>
+            <td>servlet.ImageServer / servlet.FileDownload — IsPublic = true</td>
+          </tr>
+          <tr>
+            <td>Expected result</td>
+            <td>All images render. IsPublic = true bypasses folder permission for direct URL access.</td>
+          </tr>
+          <tr>
+            <td>Pass condition</td>
+            <td>All images display without authentication error or broken image icon.</td>
+          </tr>
+          <tr>
+            <td>Total images tested</td>
+            <td id="total-count">Loading...</td>
+          </tr>
+          <tr>
+            <td>Overall result</td>
+            <td id="overall-result">Checking...</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="timestamp" id="test-time"></div>
+    </div>
 
-const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  </div>
 
-console.log('🔍 Host: Device detected - iOS:', isIOS);
+  <script>
+    // All 15 document IDs from the Images folder
+    const imageDocIds = [
+      { id: '01568000000rEIdAAM', label: 'Doc 01568000000rEIdAAM' },
+      { id: '01568000000zOC0AAM', label: 'Doc 01568000000zOC0AAM' },
+      { id: '015680000010WKmAAM', label: 'Doc 015680000010WKmAAM' },
+      { id: '015Of000006LOIPIA4', label: 'Doc 015Of000006LOIPIA4 (Fabi)' },
+      { id: '015680000012vmhAAA', label: 'Doc 015680000012vmhAAA' },
+      { id: '01568000000VQfSAAW', label: 'Doc 01568000000VQfSAAW' },
+      { id: '01568000000VQfXAAW', label: 'Doc 01568000000VQfXAAW' },
+      { id: '01568000000VQfcAAG', label: 'Doc 01568000000VQfcAAG' },
+      { id: '01568000000VQfhAAG', label: 'Doc 01568000000VQfhAAG' },
+      { id: '015Of000003DQsbIAG', label: 'Doc 015Of000003DQsbIAG' },
+      { id: '015Of000006LOBxIAO', label: 'Doc 015Of000006LOBxIAO' },
+      { id: '0155I000000YgS1QAK', label: 'Doc 0155I000000YgS1QAK' },
+      { id: '0156800000128OIAAY', label: 'Doc 0156800000128OIAAY' },
+      { id: '01568000000SCzVAAW', label: 'Doc 01568000000SCzVAAW' },
+      { id: '0155I000000YgS2QAK', label: 'Doc 0155I000000YgS2QAK (Verteo)' }
+    ];
 
-// ============================================================================
-// IFRAME COMMUNICATION
-// ============================================================================
+    const statuses = {};
+    const container = document.getElementById('bulk-images');
 
-function getIframe() {
-  return document.getElementById("embeddedMessagingFrame")?.contentWindow || null;
-}
+    imageDocIds.forEach(doc => {
+      statuses[doc.id] = 'checking';
 
-function postIframeMessage(message) {
-  const iframeWindow = getIframe();
-  if (iframeWindow) {
-    iframeWindow.postMessage(message, "*");
-    console.log('📤 Host: Sent message to iframe:', message);
-  } else {
-    console.log('⏸️ Host: Bot not opened yet, message queued:', message);
-  }
-}
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'border: 1px solid #e2e6ec; border-radius: 6px; padding: 10px; background: #fafbfc;';
 
-// ============================================================================
-// STATE PERSISTENCE (localStorage for iOS compatibility)
-// ============================================================================
+      const imgBox = document.createElement('div');
+      imgBox.style.cssText = 'width: 100%; height: 60px; display: flex; align-items: center; justify-content: center; background: #f5f7fa; border-radius: 4px; margin-bottom: 8px; overflow: hidden;';
 
-/**
- * Save state using localStorage (more reliable on iOS than sessionStorage)
- */
-function saveState() {
-  try {
-    if (!botOpened) {
-      return;
-    }
-    
-    const inputEnabled = (agentCount > 0 || lastBotMessageAllowedInput) ? '1' : '0';
-    const timestamp = new Date().getTime();
-    
-    console.log('💾 Host: Saving state:', {
-      inputEnabled: inputEnabled,
-      agentCount: agentCount,
-      lastBotMessageAllowedInput: lastBotMessageAllowedInput
+      const img = document.createElement('img');
+      img.src = `https://pfizermedinfo.my.salesforce.com/servlet/servlet.FileDownload?file=${doc.id}`;
+      img.alt = doc.label;
+      img.style.cssText = 'max-width: 100%; max-height: 60px; object-fit: contain;';
+
+      const badge = document.createElement('span');
+      badge.id = `bulk-status-${doc.id}`;
+      badge.className = 'status-badge checking';
+      badge.innerHTML = '<span class="status-dot"></span> Checking...';
+      badge.style.cssText = 'font-size: 11px; margin-bottom: 4px; display: inline-flex;';
+
+      const labelEl = document.createElement('div');
+      labelEl.style.cssText = 'font-family: monospace; font-size: 10px; color: #8891a0; word-break: break-all; margin-top: 6px;';
+      labelEl.textContent = doc.id;
+
+      img.onload = () => {
+        statuses[doc.id] = 'ok';
+        badge.className = 'status-badge ok';
+        badge.innerHTML = '<span class="status-dot"></span> Served';
+        updateOverall();
+      };
+
+      img.onerror = () => {
+        statuses[doc.id] = 'fail';
+        badge.className = 'status-badge fail';
+        badge.innerHTML = '<span class="status-dot"></span> Failed';
+        imgBox.style.background = '#fff5f5';
+        updateOverall();
+      };
+
+      imgBox.appendChild(img);
+      wrapper.appendChild(imgBox);
+      wrapper.appendChild(badge);
+      wrapper.appendChild(labelEl);
+      container.appendChild(wrapper);
     });
-    
-    localStorage.setItem(STORAGE_KEY_INPUT_ENABLED, inputEnabled);
-    localStorage.setItem(STORAGE_KEY_AGENT_COUNT, agentCount.toString());
-    localStorage.setItem(STORAGE_KEY_BOT_ALLOWED, lastBotMessageAllowedInput ? '1' : '0');
-    localStorage.setItem(STORAGE_KEY_TIMESTAMP, timestamp.toString());
-    
-    console.log('✅ Host: State saved to localStorage');
-    
-  } catch (err) {
-    console.error('❌ Host: Failed to save state:', err);
-  }
-}
 
-/**
- * Restore state from localStorage
- */
-function restoreStateFromStorage() {
-  try {
-    console.log('🔍 Host: Checking localStorage for saved state...');
-    
-    const savedInputState = localStorage.getItem(STORAGE_KEY_INPUT_ENABLED);
-    const savedAgentCount = localStorage.getItem(STORAGE_KEY_AGENT_COUNT);
-    const savedBotAllowed = localStorage.getItem(STORAGE_KEY_BOT_ALLOWED);
-    const savedTimestamp = localStorage.getItem(STORAGE_KEY_TIMESTAMP);
-    
-    console.log('🔍 Host: localStorage values:', {
-      inputEnabled: savedInputState,
-      agentCount: savedAgentCount,
-      botAllowed: savedBotAllowed,
-      timestamp: savedTimestamp
-    });
-    
-    // Check if state is too old (more than 10 minutes)
-    if (savedTimestamp) {
-      const age = new Date().getTime() - parseInt(savedTimestamp, 10);
-      const ageMinutes = Math.floor(age / 60000);
-      console.log('🕐 Host: Saved state age:', ageMinutes, 'minutes');
-      
-      if (age > 600000) { // 10 minutes
-        console.log('⏰ Host: Saved state too old, ignoring');
-        clearSavedState();
-        return false;
-      }
-    }
-    
-    // Check if there's any saved state
-    if (savedInputState === null && savedAgentCount === null && savedBotAllowed === null) {
-      console.log('📝 Host: No previous state found in localStorage');
-      return false;
-    }
-    
-    if (savedAgentCount !== null) {
-      agentCount = parseInt(savedAgentCount, 10) || 0;
-      console.log('🔄 Host: Restored agentCount:', agentCount);
-    }
-    
-    if (savedBotAllowed !== null) {
-      lastBotMessageAllowedInput = savedBotAllowed === '1';
-      console.log('🔄 Host: Restored lastBotMessageAllowedInput:', lastBotMessageAllowedInput);
-    }
-    
-    // Determine if input should be enabled based on restored state
-    if (savedInputState === '1' && (agentCount > 0 || lastBotMessageAllowedInput)) {
-      console.log('✅ Host: Page refresh - will restore ENABLED state when bot opens');
-      return true;
-    } else {
-      console.log('🔒 Host: Page refresh - will restore DISABLED state when bot opens');
-      return false;
-    }
-  } catch (err) {
-    console.error('❌ Host: Failed to restore state:', err);
-    return false;
-  }
-}
-
-/**
- * Clear saved state from localStorage
- */
-function clearSavedState() {
-  try {
-    localStorage.removeItem(STORAGE_KEY_INPUT_ENABLED);
-    localStorage.removeItem(STORAGE_KEY_AGENT_COUNT);
-    localStorage.removeItem(STORAGE_KEY_BOT_ALLOWED);
-    localStorage.removeItem(STORAGE_KEY_TIMESTAMP);
-    console.log('🧹 Host: Cleared saved state from localStorage');
-  } catch (err) {
-    console.error('❌ Host: Failed to clear saved state:', err);
-  }
-}
-
-// Save state on page visibility change (more reliable than beforeunload on iOS)
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden' && botOpened) {
-    console.log('👁️ Host: Page hidden, saving state...');
-    saveState();
-  }
-});
-
-// Save state before page unload (backup, not reliable on iOS)
-window.addEventListener('beforeunload', () => {
-  console.log('🚪 Host: beforeunload fired, saving state...');
-  saveState();
-});
-
-// Save state before page is frozen (iOS-specific event)
-window.addEventListener('pagehide', () => {
-  console.log('❄️ Host: pagehide fired, saving state...');
-  saveState();
-});
-
-// Aggressive periodic saving (every 2 seconds when bot is open)
-setInterval(() => {
-  if (botOpened) {
-    saveState();
-  }
-}, 2000);
-
-// Restore state on load
-const shouldRestoreEnabled = restoreStateFromStorage();
-
-// Clear old state after 10 minutes
-setTimeout(() => {
-  clearSavedState();
-}, 600000);
-
-// ============================================================================
-// MESSAGE EVENT HANDLER
-// ============================================================================
-
-window.addEventListener("message", function(event) {
-  try {
-    // Iframe initialization
-    if (event.data === "iframe-ready") {
-      console.log('✅ Host: Bot opened - iframe ready signal received');
-      botOpened = true;
-      
-      // Apply correct initial state based on restored state
-      if (shouldRestoreEnabled && (agentCount > 0 || lastBotMessageAllowedInput)) {
-        postIframeMessage("InputEnable");
-        console.log('🔓 Host: Restored enabled state after page refresh');
+    function setStatus(key, result) {
+      const el = document.getElementById(`status-${key}`);
+      if (!el) return;
+      if (result === 'ok') {
+        el.className = 'status-badge ok';
+        el.innerHTML = '<span class="status-dot"></span> Image served';
       } else {
-        postIframeMessage("InputDisable");
-        console.log('🔒 Host: Applied disabled state on bot open');
+        el.className = 'status-badge fail';
+        el.innerHTML = '<span class="status-dot"></span> Failed to load';
       }
-      
-      saveState();
-      return;
+      updateOverall();
     }
-    
-    // Parse conversation events
-    const details = event?.data?.data?.eventDetails?.conversationEntry;
-    const payload = details?.entryPayload;
-    const entryType = details?.entryType;
-    const senderRole = details?.sender?.role;
-    
-    if (typeof payload !== "string") {
-      return;
-    }
-    
-    // Mark that bot has been opened
-    if (!botOpened) {
-      botOpened = true;
-      console.log('✅ Host: Bot opened - conversation events detected');
-    }
-    
-    // Track agent participation changes
-    if (entryType === EVENT_PARTICIPANT_CHANGED) {
-      if (payload.includes(EVENT_OP_ADD) && payload.includes(EVENT_ROLE_AGENT)) {
-        agentCount++;
-        console.log('👤 Host: Agent joined (count:', agentCount + ')');
-        saveState();
-      } else if (payload.includes(EVENT_OP_REMOVE) && payload.includes(EVENT_ROLE_AGENT)) {
-        agentCount--;
-        console.log('👋 Host: Agent left (count:', agentCount + ')');
-        saveState();
+
+    function updateOverall() {
+      const vals = Object.values(statuses);
+      const total = vals.length;
+      const done = vals.filter(v => v !== 'checking').length;
+      const failed = vals.filter(v => v === 'fail').length;
+
+      document.getElementById('total-count').textContent = `${total} images`;
+
+      if (done < total) {
+        document.getElementById('overall-result').textContent = `Checking... (${done}/${total} complete)`;
+      } else if (failed === 0) {
+        document.getElementById('overall-result').textContent = 'PASS — All images served successfully';
+        document.getElementById('overall-result').style.color = '#0a5234';
+        document.getElementById('overall-result').style.fontWeight = '600';
+      } else {
+        document.getElementById('overall-result').textContent = `FAIL — ${failed} image(s) did not serve`;
+        document.getElementById('overall-result').style.color = '#842029';
+        document.getElementById('overall-result').style.fontWeight = '600';
       }
     }
-    
-    // Decision logic
-    if (agentCount > 0) {
-      postIframeMessage("InputEnable");
-      lastBotMessageAllowedInput = false;
-      saveState();
-      return;
-    }
-    
-    if (senderRole === "Chatbot" && payload.includes(BOT_FLAG_ENABLE)) {
-      postIframeMessage("InputEnable");
-      lastBotMessageAllowedInput = true;
-      console.log('🤖 Host: Bot requested free-text input');
-      saveState();
-      return;
-    }
-    
-    if (senderRole === "Chatbot" && !payload.includes(BOT_FLAG_ENABLE)) {
-      postIframeMessage("InputDisable");
-      lastBotMessageAllowedInput = false;
-      console.log('🤖 Host: Bot in scripted mode (no free-text)');
-      saveState();
-      return;
-    }
-    
-    if (payload.includes(EVENT_CLOSE_CONVERSATION)) {
-      postIframeMessage("InputDisable");
-      lastBotMessageAllowedInput = false;
-      agentCount = 0;
-      console.log('🔚 Host: Conversation closed');
-      clearSavedState();
-      return;
-    }
-    
-  } catch (err) {
-    console.error("❌ Host: Error processing message event:", err);
-    postIframeMessage("InputDisable");
-  }
-});
 
-console.log('🚀 Host: Input control script initialized');
-</script>
+    document.getElementById('test-time').textContent =
+      'Test run: ' + new Date().toLocaleString('en-US', { timeZoneName: 'short' });
 
-<!-- Embedded Messaging Bootstrap Script -->
-<script type='text/javascript'>
+    updateOverall();
+  </script>
 
-  window.addEventListener("onEmbeddedMessagingReady", e => {
-    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-      input_Country: "BR",
-      input_ISOCountry: "BR",
-      input_ChannelDetails: "FABI - Website | Corporate"
-    });
-  });
-  
-	function initEmbeddedMessaging() {
-		try {
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
-
-			embeddedservice_bootstrap.init(
-				'00D9V00000D7QJF',
-				'PFZ_BR_Messaging',
-				'https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWMessagingforWebBrazil',
-				{
-					scrt2URL: 'https://pfizermedinfo--upgrade.sandbox.my.salesforce-scrt.com'
-				}
-			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
-</script>
-<script type='text/javascript' src='https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWMessagingforWebBrazil/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-
+</body>
 </html>
