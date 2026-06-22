@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maibo Bot Test — Upgrade Sandbox</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f7fa; color: #1a1a2e;
+      padding: 40px 24px; min-height: 100vh;
+    }
+    .card {
+      max-width: 480px; margin: 0 auto;
+      background: #fff; border: 1px solid #e2e6ec;
+      border-radius: 8px; padding: 24px;
+    }
+    .env-badge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      background: #fff3cd; color: #856404;
+      padding: 3px 10px; border-radius: 12px; margin-bottom: 12px;
+    }
+    h1 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    p { font-size: 14px; color: #5a6070; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="env-badge">Upgrade Sandbox</div>
+    <h1>Maibo Bot Test</h1>
+    <p>Open this page in a browser with no active Salesforce session. If the Maibo avatar renders in the chat widget in the bottom-right corner, images are serving correctly for unauthenticated users.</p>
+  </div>
+
+  <script type='text/javascript'>
+    function initEmbeddedMessaging() {
+      try {
+        embeddedservice_bootstrap.settings.language = 'en_US';
+        embeddedservice_bootstrap.init(
+          '00D9V00000D7QJF',
+          'PFZ_Japan_HCP_Messaging',
+          'https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWMessagingforWebJapan',
+          {
+            scrt2URL: 'https://pfizermedinfo--upgrade.sandbox.my.salesforce-scrt.com'
+          }
+        );
+      } catch (err) {
+        console.error('Error loading Embedded Messaging: ', err);
+      }
+    }
+  </script>
+  <script type='text/javascript'
+    src='https://pfizermedinfo--upgrade.sandbox.my.site.com/ESWMessagingforWebJapan/assets/js/bootstrap.min.js'
+    onload='initEmbeddedMessaging()'>
+  </script>
+
+</body>
+</html>
